@@ -7,6 +7,7 @@ public class WizardMovement : MonoBehaviour
 	
 	private Rigidbody2D Rigidbody2D;
 	private float Horizontal;
+	public float velocidad = 5f; 
     
     void Start()
     {
@@ -20,7 +21,7 @@ public class WizardMovement : MonoBehaviour
 	
 	void FixedUpdate() 
 	{
-		Rigidbody2D.linearVelocity = new Vector2(Horizontal, Rigidbody2D.linearVelocity.y);
+		Rigidbody2D.linearVelocity = new Vector2(Horizontal*velocidad, Rigidbody2D.linearVelocity.y);
 	
 	}
 }
