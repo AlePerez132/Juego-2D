@@ -21,8 +21,12 @@ public class WizardMovement : MonoBehaviour
     {
         Horizontal = Input.GetAxisRaw("Horizontal");
 
-        Debug.DrawRay(transform.position + Vector3.down, Vector3.down * 0.1f, Color.red);
-        if (Physics2D.Raycast(transform.position + Vector3.down, Vector3.down, 0.1f)) 
+        if (Grounded){
+        Debug.Log("Estoy tocando el suelo");
+        }
+
+        Debug.DrawRay(transform.position, Vector3.down * 0.1f, Color.red);
+        if (Physics2D.Raycast(transform.position, Vector3.down, 0.05f)) 
         {
             Grounded=true;
         }
