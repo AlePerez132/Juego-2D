@@ -465,7 +465,7 @@ GameObject:
   - component: {fileID: 681828717}
   - component: {fileID: 681828718}
   m_Layer: 0
-  m_Name: player
+  m_Name: Wizard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -481,7 +481,7 @@ Animator:
   m_GameObject: {fileID: 681828712}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 288ad2d694c05ce42a4dd29844c3fbcb, type: 2}
+  m_Controller: {fileID: 9100000, guid: ecd05e374623be544a83342caa91882b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1025,7 +1025,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 4.4
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

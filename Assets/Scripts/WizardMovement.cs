@@ -10,16 +10,22 @@ public class WizardMovement : MonoBehaviour
 	private Rigidbody2D Rigidbody2D;
 	private float Horizontal;
     private bool Grounded = false;
-
+    private Animator Animator;
     
     void Start()
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
+        Animator = GetComponent<Animator>();
     }
 
     void Update()
     {
         Horizontal = Input.GetAxisRaw("Horizontal");
+
+        if (Horizontal < 0.0f) transform.localScale = new Vector3(-3.0f, 3.0f, 1.0f);
+        else if (Horizontal > 0.0f) transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
+
+        Animator.SetBool("running",Horizontal != 0.0f);
 
         if (Grounded){
         Debug.Log("Estoy tocando el suelo");
