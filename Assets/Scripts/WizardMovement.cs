@@ -22,25 +22,23 @@ public class WizardMovement : MonoBehaviour
     {
         Horizontal = Input.GetAxisRaw("Horizontal");
 
-        if (Horizontal < 0.0f) transform.localScale = new Vector3(-3.0f, 3.0f, 1.0f);
-        else if (Horizontal > 0.0f) transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
+        // Girar el personaje según la dirección
+        if (Horizontal < 0.0f) 
+            transform.localScale = new Vector3(-3.0f, 3.0f, 1.0f);
+        else if (Horizontal > 0.0f) 
+            transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
 
-        Animator.SetBool("running",Horizontal != 0.0f);
+        // Actualizar animación de correr
+        Animator.SetBool("running", Horizontal != 0.0f);
 
-        if (Grounded){
-        Debug.Log("Estoy tocando el suelo");
-        }
-
+        // Comprobar si está en el suelo con un Raycast
         Debug.DrawRay(transform.position, Vector3.down * 0.1f, Color.red);
-        if (Physics2D.Raycast(transform.position, Vector3.down, 0.05f)) 
-        {
-            Grounded=true;
-        }
-        else
-        {
-            Grounded=false;
-        }
+        Grounded = Physics2D.Raycast(transform.position, Vector3.down, 0.05f);
 
+        // Actualizar el estado de suelo en el Animator
+        Animator.SetBool("isGrounded", Grounded);
+
+        // Saltar si se presiona "W" y está en el suelo
 		if (Input.GetKeyDown(KeyCode.W) && Grounded)
         {
             Jump();
@@ -50,11 +48,13 @@ public class WizardMovement : MonoBehaviour
     private void Jump()
     {
         Rigidbody2D.AddForce(Vector2.up * JumpForce);
+        Animator.SetTrigger("Jump"); 
     }
 
 	void FixedUpdate() 
 	{
-		Rigidbody2D.linearVelocity = new Vector2(Horizontal*velocidad, Rigidbody2D.linearVelocity.y);
-	
+
+		Rigidbody2D.linearVelocity = new Vector2(Horizontal * velocidad, Rigidbody2D.linearVelocity.y);
 	}
 }
+
