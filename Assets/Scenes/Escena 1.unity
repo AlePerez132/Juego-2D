@@ -1052,10 +1052,9 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -8.53, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1250533685}
-  - {fileID: 1774541922}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1071839755
@@ -1144,7 +1143,8 @@ Transform:
   m_LocalPosition: {x: 0.0164, y: -0.0257, z: 100}
   m_LocalScale: {x: 4.9, y: 4.5, z: 3}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1774541922}
   m_Father: {fileID: 1071839754}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1250533686
@@ -1627,7 +1627,7 @@ GameObject:
   - component: {fileID: 1700415459}
   m_Layer: 0
   m_Name: suelo
-  m_TagString: Untagged
+  m_TagString: suelo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3632,11 +3632,11 @@ Transform:
   m_GameObject: {fileID: 1774541921}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0103, y: -2.4218, z: 99}
-  m_LocalScale: {x: 4.8141522, y: 4.1162105, z: 1}
+  m_LocalPosition: {x: -0.0054489146, y: -0.53246665, z: -0.33333334}
+  m_LocalScale: {x: 0.98248, y: 0.9147135, z: 0.33333334}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1071839754}
+  m_Father: {fileID: 1250533685}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1774541923
 SpriteRenderer:

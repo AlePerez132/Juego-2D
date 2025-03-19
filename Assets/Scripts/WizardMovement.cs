@@ -32,8 +32,8 @@ public class WizardMovement : MonoBehaviour
         Animator.SetBool("running", Horizontal != 0.0f);
 
         // Comprobar si está en el suelo con un Raycast
-        Debug.DrawRay(transform.position, Vector3.down * 0.1f, Color.red);
-        Grounded = Physics2D.Raycast(transform.position, Vector3.down, 0.05f);
+        //Debug.DrawRay(transform.position, Vector3.down * 0.1f, Color.red);
+        //Grounded = Physics2D.Raycast(transform.position, Vector3.down, 0.05f);
 
         // Actualizar el estado de suelo en el Animator
         Animator.SetBool("isGrounded", Grounded);
@@ -48,6 +48,7 @@ public class WizardMovement : MonoBehaviour
     private void Jump()
     {
         Rigidbody2D.AddForce(Vector2.up * JumpForce);
+        Grounded = false;
         Animator.SetTrigger("Jump"); 
     }
 
@@ -56,5 +57,13 @@ public class WizardMovement : MonoBehaviour
 
 		Rigidbody2D.linearVelocity = new Vector2(Horizontal * velocidad, Rigidbody2D.linearVelocity.y);
 	}
+
+    void OnCollisionEnter2D(Collision2D colision)
+    {
+        if (colision.gameObject.CompareTag("suelo"))
+        {
+            Grounded = true;
+        }
+    }
 }
 
