@@ -3,10 +3,10 @@ using UnityEngine.SceneManagement;
 
 public class CambiarEscena : MonoBehaviour
 {
-    public string nombreEscena; // Nombre de la escena a cargar
+    private string nombreEscena = "Juego"; // Nombre de la escena a cargar
 
     public void CambiarDeEscena()
     {
-        SceneManager.LoadScene("Juego");
+        SceneManager.LoadScene(nombreEscena);
     }
 }
