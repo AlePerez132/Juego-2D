@@ -11,7 +11,15 @@ public class WizardMovement : MonoBehaviour
 	private float Horizontal;
     private bool Grounded = false;
     private Animator Animator;
-    
+
+    //CoyotimeTime es para que el jugador pueda saltar aunque ya haya abandonado el suelo
+    private float coyoteTime=0.2f;
+    private float coyoteTimeCounter;
+
+    //JumpBuffering es para que el juego registre la acción de salto un poco antes de que el jugador toque el suelo
+    private float jumpBufferTime=0.2f;
+    private float jumpBufferCounter;
+
     void Start()
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
@@ -38,10 +46,25 @@ public class WizardMovement : MonoBehaviour
         // Actualizar el estado de suelo en el Animator
         Animator.SetBool("isGrounded", Grounded);
 
+        if (Grounded){
+            coyoteTimeCounter=coyoteTime;
+        } 
+        else{
+            coyoteTimeCounter-=Time.deltaTime;
+        }
+
+        if(Input.GetKeyDown(KeyCode.W)){
+            jumpBufferCounter = jumpBufferTime;
+        }else{
+            jumpBufferCounter-=Time.deltaTime;
+        }
+
         // Saltar si se presiona "W" y está en el suelo
-		if (Input.GetKeyDown(KeyCode.W) && Grounded)
+		if (jumpBufferCounter >0f && coyoteTimeCounter > 0f)
         {
             Jump();
+            jumpBufferCounter=0f;
+            coyoteTimeCounter=0f;
         }
     }
 	
