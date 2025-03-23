@@ -25,7 +25,7 @@ public class ButtonManager : MonoBehaviour
         foreach (Button boton in botones)
         {
             if (boton.name == "No" || boton.name == "Salir")
-                boton.onClick.AddListener(() => DestruirBotónCerrar());
+                boton.onClick.AddListener(() => DestruirBotonCerrar());
             else if (boton.name == "Si")
                 boton.onClick.AddListener(() => ExitGame());
         }
@@ -47,7 +47,7 @@ public class ButtonManager : MonoBehaviour
     }
 
     //se usa para cerrar las ventanas emergentes
-    public void DestruirBotónCerrar(){
+    public void DestruirBotonCerrar(){
         GameObject popup = GameObject.Find("Pop-up Salir(Clone)");
         Destroy(popup);
     }
