@@ -100,14 +100,14 @@ public class WizardMovement : MonoBehaviour
 
     private void DoubleJump()
     {
-        Rigidbody2D.velocity = new Vector2(Rigidbody2D.velocity.x, 0); // Resetear la velocidad vertical
+        Rigidbody2D.linearVelocity = new Vector2(Rigidbody2D.linearVelocity.x, 0); // Resetear la velocidad vertical
         Rigidbody2D.AddForce(Vector2.up * DoubleJumpForce);
         Animator.SetTrigger("Jump");
     }
 
     void FixedUpdate()
     {
-        Rigidbody2D.velocity = new Vector2(Horizontal * velocidad, Rigidbody2D.velocity.y);
+        Rigidbody2D.linearVelocity = new Vector2(Horizontal * velocidad, Rigidbody2D.linearVelocity.y);
     }
 
     void OnCollisionEnter2D(Collision2D colision)
