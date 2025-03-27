@@ -1,10 +1,10 @@
+using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.UI; 
 
 
 public class ButtonManager : MonoBehaviour
 {
-    public Transform canvas;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -18,23 +18,17 @@ public class ButtonManager : MonoBehaviour
         
     }
 
-    public void mostrarPopUpSalir(GameObject popup){
-        GameObject nuevoPopup = Instantiate(popup, canvas);
-        Button[] botones = nuevoPopup.GetComponentsInChildren<Button>();
-
-        foreach (Button boton in botones)
-        {
-            if (boton.name == "No" || boton.name == "Salir")
-                boton.onClick.AddListener(() => DestruirBotonCerrar());
-            else if (boton.name == "Si")
-                boton.onClick.AddListener(() => ExitGame());
-        }
+   public void ApareceMenuOpciones()
+    {
+        GameObject popup = GameObject.Find("Menu opciones");
+        popup.transform.position = new Vector3(0, 150, -10);
     }
 
-    public void mostrarPopUpVolumen(GameObject popup){
-        GameObject nuevoPopup = Instantiate(popup, canvas);
+    public void CerrarMenuOpciones()
+    {
+        GameObject popup = GameObject.Find("Menu opciones");
+        popup.transform.position = new Vector3(0, 1000, -10);
     }
-   
 
     public void ExitGame()
     {
@@ -48,7 +42,10 @@ public class ButtonManager : MonoBehaviour
 
     //se usa para cerrar las ventanas emergentes
     public void DestruirBotonCerrar(){
-        GameObject popup = GameObject.Find("Pop-up Salir(Clone)");
+        GameObject popup = GameObject.Find("Pop-up Salir");
         Destroy(popup);
     }
+
+
+
 }
