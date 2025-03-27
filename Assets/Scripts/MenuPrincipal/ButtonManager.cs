@@ -18,18 +18,6 @@ public class ButtonManager : MonoBehaviour
         
     }
 
-   public void ApareceMenuOpciones()
-    {
-        GameObject popup = GameObject.Find("Menu opciones");
-        popup.transform.position = new Vector3(0, 150, -10);
-    }
-
-    public void CerrarMenuOpciones()
-    {
-        GameObject popup = GameObject.Find("Menu opciones");
-        popup.transform.position = new Vector3(0, 1000, -10);
-    }
-
     public void ExitGame()
     {
         Application.Quit();
@@ -40,12 +28,48 @@ public class ButtonManager : MonoBehaviour
         #endif
     }
 
-    //se usa para cerrar las ventanas emergentes
-    public void DestruirBotonCerrar(){
-        GameObject popup = GameObject.Find("Pop-up Salir");
-        Destroy(popup);
+    public void ApareceMenuOpciones()
+    {
+        GameObject popup = GameObject.Find("Menu opciones");
+        RectTransform rectTransform = popup.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = new Vector2(0, 150);
     }
 
+    public void CerrarMenuOpciones()
+    {
+        GameObject popup = GameObject.Find("Menu opciones");
+        RectTransform rectTransform = popup.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = new Vector2(0, 1000);
+    }
 
+    public void AparecePopupSalir()
+    {
+        GameObject popup = GameObject.Find("Pop-up salir");
+        RectTransform rectTransform = popup.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = new Vector2(0, 50);
+    }
+
+    //se usa para cerrar las ventanas emergentes
+    public void CerrarPopupSalir(){
+        GameObject popup = GameObject.Find("Pop-up salir");
+        RectTransform rectTransform = popup.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = new Vector2(1000, 1000);
+    }
+
+    public void AparecePopupVolumen()
+    {
+        GameObject popup = GameObject.Find("Pop-up volumen");
+        RectTransform rectTransform = popup.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = new Vector2(0, 120);
+        CerrarMenuOpciones();
+    }
+
+    public void CerrarPopupVolumen()
+    {
+        GameObject popup = GameObject.Find("Pop-up volumen");
+        RectTransform rectTransform = popup.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = new Vector2(-1500, 1500);
+        ApareceMenuOpciones();
+    }
 
 }
