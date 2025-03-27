@@ -3,7 +3,7 @@ using UnityEngine;
 public class Skeleton_Script : MonoBehaviour
 {
     public GameObject Wizard;
-    public float speed = 2.7f;
+    public float speed = 2.6f;
     public float alturaPermitida = 2.0f; // Máxima diferencia de altura permitida para atacar
     public LayerMask groundLayer; // Capa del suelo
     public Transform groundCheck;
@@ -44,7 +44,7 @@ public class Skeleton_Script : MonoBehaviour
         {
             anim.SetTrigger("Attack"); // Iniciar ataque
         }
-        else if (distancia < 18.0f && HaySueloDelante()) //&& diferenciaAltura <= alturaPermitida)
+        else if (distancia < 15.0f && HaySueloDelante()) //&& diferenciaAltura <= alturaPermitida)
         {
             // Si está en rango y hay suelo, caminar hacia el jugador
             direccion.y = 0; // Evita movimiento vertical
