@@ -48,7 +48,6 @@ public class ButtonManager : MonoBehaviour
         rectTransform.anchoredPosition = new Vector2(0, 50);
     }
 
-    //se usa para cerrar las ventanas emergentes
     public void CerrarPopupSalir(){
         GameObject popup = GameObject.Find("Pop-up salir");
         RectTransform rectTransform = popup.GetComponent<RectTransform>();
@@ -71,4 +70,19 @@ public class ButtonManager : MonoBehaviour
         ApareceMenuOpciones();
     }
 
+    public void AparecePopupDificultad()
+    {
+        GameObject popup = GameObject.Find("Pop-up dificultad");
+        RectTransform rectTransform = popup.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = new Vector2(-0, 80);
+        CerrarMenuOpciones();
+    }
+
+    public void CerrarPopupDificultad()
+    {
+        GameObject popup = GameObject.Find("Pop-up dificultad");
+        RectTransform rectTransform = popup.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = new Vector2(-1500, 1500);
+        ApareceMenuOpciones();
+    }
 }

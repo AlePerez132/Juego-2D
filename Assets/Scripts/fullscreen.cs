@@ -28,7 +28,7 @@ public class fullscreen : MonoBehaviour
     public void ToggleFullscreen(){
         if(Screen.fullScreen){
             texto.SetText("Fullscreen");
-            Screen.SetResolution(960, 540, false);
+            Screen.SetResolution(1920, 1080, false);
         } else
         {
             texto.SetText("Modo Ventana");
