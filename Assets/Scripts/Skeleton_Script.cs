@@ -11,16 +11,25 @@ public class Skeleton_Script : MonoBehaviour
     private Animator anim;
 
     void Start()
+{
+    anim = GetComponent<Animator>();
+
+    if (Wizard == null) // Si no está asignado manualmente
     {
-        anim = GetComponent<Animator>(); 
+        GameObject wizardEncontrado = GameObject.FindWithTag("Wizard"); 
+        if (wizardEncontrado != null)
+        {
+            Wizard = wizardEncontrado;
+        }
     }
+}
+
 
     // Método que detecta si hay suelo delante
     private bool HaySueloDelante()
     {
         if (groundCheck == null)
         {
-            // Debug.LogError("groundCheck no está asignado en el Inspector.");
             return false;
         }
 
@@ -63,4 +72,17 @@ public class Skeleton_Script : MonoBehaviour
         else
             transform.localScale = new Vector3(-3.0f, 3.0f, 3.0f);
     }
+
+    public void HacerDanio()
+{
+    if (Wizard != null)
+    {
+        WizardMovement wizardScript = Wizard.GetComponent<WizardMovement>();
+        if (wizardScript != null)
+        {
+            wizardScript.RecibirDanio(8); 
+        }
+    }
+}
+
 }

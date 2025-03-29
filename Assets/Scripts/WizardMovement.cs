@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WizardMovement : MonoBehaviour
 {
@@ -13,31 +12,35 @@ public class WizardMovement : MonoBehaviour
     private Animator Animator;
 
     private int groundCollisionCount = 0;
-
     private float coyoteTime = 0.2f;
     private float coyoteTimeCounter;
-
     private float jumpBufferTime = 0.2f;
     private float jumpBufferCounter;
+
+    public int maxVida = 200;
+    private int vidaActual;
+    public Image barraVida;
+
+    private bool isDead = false; // Nueva variable para controlar si el personaje está muerto
 
     void Start()
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
-        Screen.fullScreen = true;
+        vidaActual = maxVida;
     }
 
-    void Update()
+    void Update() 
     {
+        if (isDead) return; // Si el personaje está muerto, no se ejecuta el código de movimiento
+
         Horizontal = Input.GetAxisRaw("Horizontal");
 
-        // Girar personaje según dirección
         if (Horizontal < 0.0f)
             transform.localScale = new Vector3(-3.0f, 3.0f, 1.0f);
         else if (Horizontal > 0.0f)
             transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
 
-        // Animaciones
         Animator.SetBool("running", Horizontal != 0.0f);
         Animator.SetBool("isGrounded", Grounded);
 
@@ -59,7 +62,6 @@ public class WizardMovement : MonoBehaviour
             jumpBufferCounter -= Time.deltaTime;
         }
 
-        // Saltar
         if (jumpBufferCounter > 0f && coyoteTimeCounter > 0f)
         {
             Jump();
@@ -68,9 +70,9 @@ public class WizardMovement : MonoBehaviour
         }
     }
 
-    private void Jump()
+    private void Jump() //SALTO
     {
-        Rigidbody2D.linearVelocity = new Vector2(Rigidbody2D.linearVelocity.x, 0); 
+        Rigidbody2D.linearVelocity = new Vector2(Rigidbody2D.linearVelocity.x, 0);
         Rigidbody2D.AddForce(Vector2.up * JumpForce);
         Grounded = false;
         Animator.SetTrigger("Jump");
@@ -78,15 +80,24 @@ public class WizardMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (isDead) return; // Si está muerto, no actualizamos el movimiento
+
         Rigidbody2D.linearVelocity = new Vector2(Horizontal * velocidad, Rigidbody2D.linearVelocity.y);
     }
 
     void OnCollisionEnter2D(Collision2D colision)
     {
+        if (isDead) return; // Si está muerto, no recibe daño
+
         if (colision.gameObject.CompareTag("suelo") || colision.gameObject.CompareTag("plataformas"))
         {
             groundCollisionCount++;
             Grounded = true;
+        }
+
+        if (colision.gameObject.CompareTag("skeleton"))
+        {
+            RecibirDanio(15);
         }
     }
 
@@ -101,5 +112,69 @@ public class WizardMovement : MonoBehaviour
                 groundCollisionCount = 0; 
             }
         }
+    }
+
+    public void RecibirDanio(int cantidad)
+{
+    if (isDead) return; 
+
+    vidaActual -= cantidad;
+    vidaActual = Mathf.Clamp(vidaActual, 0, maxVida); // Para que la vida no sea negativa
+
+    // Actualizar la barra de vida
+    barraVida.fillAmount = (float)vidaActual / maxVida;
+
+    // Cambiar color según la vida actual
+    if (vidaActual > maxVida * 0.6f)
+    {
+        barraVida.color = Color.green; 
+    }
+    else if (vidaActual > maxVida * 0.38f)
+    {
+        barraVida.color = Color.yellow; 
+    }
+    else
+    {
+        barraVida.color = Color.red; 
+    }
+
+    if (vidaActual <= 0)
+    {
+        Morir();
+    }
+}
+
+
+    void Morir() 
+    {
+        isDead = true; // Marcar que el personaje está muerto
+
+        Animator.SetTrigger("muerte");
+
+        // Llamar a FinalizarMuerte después de 3 segundos 
+        Invoke("FinalizarMuerte", 3f);
+    }
+
+    void FinalizarMuerte()
+    {
+        // Se desactiva el control del personaje y se detiene el movimiento
+        this.enabled = false;  // Desactivar el script para que no siga moviéndose
+        Rigidbody2D.linearVelocity = Vector2.zero;  // Detener el movimiento
+        Rigidbody2D.isKinematic = true;  // Evitar que siga afectado por la gravedad
+        DesactivarCollider();
+        Animator.enabled = false;  // Desactivar el Animator para que no siga reproduciendo animaciones
+
+        // Cerrar el juego tras 3 segundos
+        Invoke("SalirDelJuego", 3f);
+    }
+
+    void DesactivarCollider()
+    {
+        GetComponent<Collider2D>().enabled = false;
+    }
+
+    void SalirDelJuego()
+    {
+        Application.Quit(); // Cierra el juego
     }
 }
