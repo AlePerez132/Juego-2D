@@ -32,7 +32,7 @@ public class fullscreen : MonoBehaviour
         } else
         {
             texto.SetText("Modo Ventana");
-            Screen.SetResolution(1920, 1080, false);
+            Screen.SetResolution(1920, 1080, true);
         }
     }
 }
