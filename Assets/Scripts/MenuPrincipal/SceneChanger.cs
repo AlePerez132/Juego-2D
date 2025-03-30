@@ -4,7 +4,7 @@ using System.Collections;
 
 public class CambiarEscena : MonoBehaviour
 {
-    private string nombreEscena = "Juego"; // Nombre de la escena a cargar
+    private string nombreEscena = "Escena1"; // Nombre de la escena a cargar
 
     public void CambiarDeEscena()
     {

@@ -4093,7 +4093,7 @@ GameObject:
   - component: {fileID: 1582992970}
   m_Layer: 0
   m_Name: AudioManager
-  m_TagString: Untagged
+  m_TagString: Audio
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4114,7 +4114,19 @@ MonoBehaviour:
   SFXSource: {fileID: 1617235599}
   botonSimple: {fileID: 8300000, guid: 45dd760e7266b434688409fe32085836, type: 3}
   botonEntrada: {fileID: 8300000, guid: 21f0e19cc37c22e499d86284b29a7295, type: 3}
+  salto: {fileID: 8300000, guid: da87b41497849da42a4ad04089a4cf0c, type: 3}
+  andar: {fileID: 8300000, guid: 0ad31884d81b7e64f816b4e1913204d5, type: 3}
+  caer: {fileID: 8300000, guid: 3c52fbfa6a990784ab0d42e776227c94, type: 3}
+  recibirDanio: {fileID: 8300000, guid: 6aa47a556e30eba479b0d4b724ea54ed, type: 3}
+  espadazo: {fileID: 8300000, guid: 165f5b1fff581484da47f09745cae4f0, type: 3}
+  muerteMago: {fileID: 8300000, guid: e8f0fe8200cca964497787ea55f3da54, type: 3}
+  muerteEnemigo: {fileID: 8300000, guid: f3825476e0bcfba4382185b045f70289, type: 3}
+  lanzarBolaFuego: {fileID: 8300000, guid: f6033c582a11c6c47b67d23ce8b8aa1d, type: 3}
+  esqueletoRecibirDanio: {fileID: 8300000, guid: b071d46f2c394ac41a23e3f8412688eb, type: 3}
+  impactoBolaFuego: {fileID: 8300000, guid: 3a28ed7e38395e9448f0512f23091831, type: 3}
   musicaLobby: {fileID: 8300000, guid: 5cde6bdfb5c2003478545c5023802395, type: 3}
+  musicaEscena1: {fileID: 8300000, guid: 6f161f996798b4b4c83a8e868728b781, type: 3}
+  musicaEscena2: {fileID: 8300000, guid: 18cda75f06d0b474385a0060945882f9, type: 3}
 --- !u!4 &1582992971
 Transform:
   m_ObjectHideFlags: 0
@@ -4123,7 +4135,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1582992969}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.92145956, y: 15.64, z: 0.39194137}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

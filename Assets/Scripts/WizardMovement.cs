@@ -23,14 +23,17 @@ public class WizardMovement : MonoBehaviour
 
     private bool isDead = false; // Nueva variable para controlar si el personaje está muerto
 
+    AudioManager audioManager;
+
     void Start()
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
         vidaActual = maxVida;
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
-    void Update() 
+    void Update()
     {
         if (isDead) return; // Si el personaje está muerto, no se ejecuta el código de movimiento
 
@@ -68,6 +71,11 @@ public class WizardMovement : MonoBehaviour
             jumpBufferCounter = 0f;
             coyoteTimeCounter = 0f;
         }
+
+        if (Horizontal != 0.00f && Grounded && !audioManager.SFXSource.isPlaying)
+        {
+            audioManager.reproducirEfecto(audioManager.andar);
+        }
     }
 
     private void Jump() //SALTO
@@ -76,6 +84,7 @@ public class WizardMovement : MonoBehaviour
         Rigidbody2D.AddForce(Vector2.up * JumpForce);
         Grounded = false;
         Animator.SetTrigger("Jump");
+        audioManager.reproducirEfecto(audioManager.salto);
     }
 
     void FixedUpdate()
@@ -93,6 +102,7 @@ public class WizardMovement : MonoBehaviour
         {
             groundCollisionCount++;
             Grounded = true;
+            //audioManager.reproducirEfecto(audioManager.caer); se ejecuta varias veces al andar, no entiendo por que
         }
 
         if (colision.gameObject.CompareTag("skeleton"))
@@ -109,45 +119,51 @@ public class WizardMovement : MonoBehaviour
             if (groundCollisionCount <= 0)
             {
                 Grounded = false;
-                groundCollisionCount = 0; 
+                groundCollisionCount = 0;
             }
         }
     }
 
     public void RecibirDanio(int cantidad)
-{
-    if (isDead) return; 
-
-    vidaActual -= cantidad;
-    vidaActual = Mathf.Clamp(vidaActual, 0, maxVida); // Para que la vida no sea negativa
-
-    // Actualizar la barra de vida
-    barraVida.fillAmount = (float)vidaActual / maxVida;
-
-    // Cambiar color según la vida actual
-    if (vidaActual > maxVida * 0.6f)
     {
-        barraVida.color = Color.green; 
-    }
-    else if (vidaActual > maxVida * 0.38f)
-    {
-        barraVida.color = Color.yellow; 
-    }
-    else
-    {
-        barraVida.color = Color.red; 
+        if (isDead) return;
+
+        
+        vidaActual -= cantidad;
+        vidaActual = Mathf.Clamp(vidaActual, 0, maxVida); // Para que la vida no sea negativa
+
+        // Actualizar la barra de vida
+        barraVida.fillAmount = (float)vidaActual / maxVida;
+
+        // Cambiar color según la vida actual
+        if (vidaActual > maxVida * 0.6f)
+        {
+            barraVida.color = Color.green;
+        }
+        else if (vidaActual > maxVida * 0.38f)
+        {
+            barraVida.color = Color.yellow;
+        }
+        else
+        {
+            barraVida.color = Color.red;
+        }
+
+        if (vidaActual <= 0)
+        {
+            Morir();
+        } else //solo se reproduce el efecto de recibir danio si el golpe no lo mata
+        {
+            audioManager.reproducirEfecto(audioManager.recibirDanio);
+        }
     }
 
-    if (vidaActual <= 0)
-    {
-        Morir();
-    }
-}
 
-
-    void Morir() 
+    void Morir()
     {
         isDead = true; // Marcar que el personaje está muerto
+
+        audioManager.reproducirEfecto(audioManager.muerteMago);
 
         Animator.SetTrigger("muerte");
 

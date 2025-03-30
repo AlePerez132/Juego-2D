@@ -8,6 +8,7 @@ TagManager:
   - peligro
   - skeleton
   - plataformas
+  - Audio
   layers:
   - Default
   - TransparentFX
