@@ -9,6 +9,7 @@ TagManager:
   - skeleton
   - plataformas
   - Audio
+  - puerta
   layers:
   - Default
   - TransparentFX
