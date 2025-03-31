@@ -8,19 +8,20 @@ public class fireball : MonoBehaviour
     private Rigidbody2D Rigidbody2D;
     private Vector2 Direction;
 
-    void Start()
-    {
-        Rigidbody2D = GetComponent<Rigidbody2D>();
-    }
+  void Start() {
+    Rigidbody2D = GetComponent<Rigidbody2D>();
+    Debug.Log("Bala creada en: " + transform.position);
+}
 
-    void Update()
-    {
-        Rigidbody2D.linearVelocity = Direction * Speed;
-    }
+    void FixedUpdate() {
+    Rigidbody2D.linearVelocity = Direction * Speed;
+}
 
-    public void SetDirection(Vector2 direction) {
-        Direction = direction;
-    }
+   public void SetDirection(Vector2 direction) {
+    Direction = direction;
+    Debug.Log("Dirección asignada a la bala: " + Direction);
+}
+
 
     public void DestroyFireball() {
         Destroy(gameObject);

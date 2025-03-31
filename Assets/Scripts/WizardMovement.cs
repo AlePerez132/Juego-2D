@@ -37,7 +37,7 @@ public class WizardMovement : MonoBehaviour
 
     void Update()
     {
-        if (isDead) return; // Si el personaje está muerto, no se ejecuta el código de movimiento
+        if (isDead) return; 
 
         Horizontal = Input.GetAxisRaw("Horizontal");
 
@@ -79,29 +79,43 @@ public class WizardMovement : MonoBehaviour
             audioManager.reproducirEfecto(audioManager.andar);
         }
 
-        if (Input.GetKey(KeyCode.C) && Time.time > LastShoot + 0.75f) {
+        if (Input.GetKeyDown(KeyCode.C) && Time.time > LastShoot + 0.75f) 
+ {
             Shoot();
             LastShoot = Time.time;
         }
     }
 
-    private void Shoot() { //DISPARO
+   private void Shoot() {
+    Debug.Log("Intentando disparar...");
 
-        Vector3 direction;
-
-        if(transform.localScale.x == 1.0f ) {
-            direction = Vector2.right; 
-        } else {
-            direction = Vector2.left;
-        }
-
-
-    GameObject fireball_shot = Instantiate(fireball, transform.position + direction * 0.1f, Quaternion.identity);
-    fireball_shot.GetComponent<fireball>().SetDirection(direction); //Del script de la bala
+    if (fireball == null) {
+        Debug.LogError("Error: No hay prefab asignado en el Inspector.");
+        return;
     }
+
+    Vector3 direction;
+    Animator.SetTrigger("ataque");
+
+    if (transform.localScale.x > 0.0f) {
+        direction = Vector2.right;
+    } else {
+        direction = Vector2.left;
+    }
+
+    GameObject fireball_shot = Instantiate(fireball, transform.position + direction * 1.5f, Quaternion.identity);
+    Debug.Log("Bala instanciada en: " + fireball_shot.transform.position);
+
+    fireball_shot.GetComponent<fireball>().SetDirection(direction);
+}
 
     private void Jump() //SALTO
     {
+        if (Input.GetKey(KeyCode.Space) && Time.time > LastShoot + 0.75f) {
+            Shoot();
+            LastShoot = Time.time;
+        }
+
         Rigidbody2D.linearVelocity = new Vector2(Rigidbody2D.linearVelocity.x, 0);
         Rigidbody2D.AddForce(Vector2.up * JumpForce);
         Grounded = false;
@@ -118,7 +132,7 @@ public class WizardMovement : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D colision)
     {
-        if (isDead) return; // Si está muerto, no recibe daño
+        if (isDead) return; 
 
         if (colision.gameObject.CompareTag("suelo") || colision.gameObject.CompareTag("plataformas"))
         {
@@ -154,10 +168,9 @@ public class WizardMovement : MonoBehaviour
         vidaActual -= cantidad;
         vidaActual = Mathf.Clamp(vidaActual, 0, maxVida); // Para que la vida no sea negativa
 
-        // Actualizar la barra de vida
+        //Actualiza la barra de vida
         barraVida.fillAmount = (float)vidaActual / maxVida;
 
-        // Cambiar color según la vida actual
         if (vidaActual > maxVida * 0.6f)
         {
             barraVida.color = Color.green;
@@ -195,14 +208,12 @@ public class WizardMovement : MonoBehaviour
 
     void FinalizarMuerte()
     {
-        // Se desactiva el control del personaje y se detiene el movimiento
-        this.enabled = false;  // Desactivar el script para que no siga moviéndose
-        Rigidbody2D.linearVelocity = Vector2.zero;  // Detener el movimiento
-        Rigidbody2D.isKinematic = true;  // Evitar que siga afectado por la gravedad
+        this.enabled = false;  
+        Rigidbody2D.linearVelocity = Vector2.zero;  //Se detiene el movimiento
+        Rigidbody2D.isKinematic = true;  //Evita que siga afectado por la gravedad
         DesactivarCollider();
-        Animator.enabled = false;  // Desactivar el Animator para que no siga reproduciendo animaciones
+        Animator.enabled = false; 
 
-        // Cerrar el juego tras 3 segundos
         Invoke("SalirDelJuego", 3f);
     }
 
@@ -213,6 +224,6 @@ public class WizardMovement : MonoBehaviour
 
     void SalirDelJuego()
     {
-        Application.Quit(); // Cierra el juego
+        Application.Quit(); 
     }
 }
