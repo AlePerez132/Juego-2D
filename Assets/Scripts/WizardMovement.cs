@@ -27,11 +27,32 @@ public class WizardMovement : MonoBehaviour
 
     AudioManager audioManager;
 
+    public static WizardMovement Instance;
+    private void Awake()
+    {
+        // Asegura que solo haya una instancia del GameManager
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // No destruir al cambiar de escena
+        }
+        else
+        {
+            Destroy(gameObject); // Evitar duplicados
+        }
+    }
+
     void Start()
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
-        vidaActual = maxVida;
+        if (PlayerPrefs.HasKey("vidaMago")){
+            vidaActual = PlayerPrefs.GetInt("vidaMago");
+            barraVida.fillAmount = (float)vidaActual / maxVida;
+        }
+        else {
+            vidaActual = maxVida;
+        }
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
@@ -166,6 +187,7 @@ public class WizardMovement : MonoBehaviour
 
         
         vidaActual -= cantidad;
+        PlayerPrefs.SetInt("vidaMago", vidaActual);
         vidaActual = Mathf.Clamp(vidaActual, 0, maxVida); // Para que la vida no sea negativa
 
         //Actualiza la barra de vida

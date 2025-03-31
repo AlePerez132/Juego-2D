@@ -6,6 +6,7 @@ public class CambiarEscena : MonoBehaviour
 {
     private string nombreEscena = "Escena1"; // Nombre de la escena a cargar
 
+    
     public void CambiarDeEscena()
     {
         StartCoroutine(CambiarEscenaDespuesDeSonido());

@@ -8,7 +8,10 @@ public class ButtonManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        if (PlayerPrefs.HasKey("vidaMago"))
+        {
+            PlayerPrefs.SetInt("vidaMago", 100); //ESTO SE DEBERIA MODIFICAR EN FUNCION DE LA DIFICULTAD
+        }
     }
 
     // Update is called once per frame
