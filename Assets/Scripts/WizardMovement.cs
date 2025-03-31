@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class WizardMovement : MonoBehaviour
 {
+    public GameObject fireball;
     public float velocidad = 5f;
     public float JumpForce = 150f;
 
@@ -16,12 +17,13 @@ public class WizardMovement : MonoBehaviour
     private float coyoteTimeCounter;
     private float jumpBufferTime = 0.2f;
     private float jumpBufferCounter;
+    private float LastShoot;
 
     public int maxVida = 200;
     private int vidaActual;
     public Image barraVida;
 
-    private bool isDead = false; // Nueva variable para controlar si el personaje está muerto
+    private bool isDead = false; 
 
     AudioManager audioManager;
 
@@ -76,6 +78,26 @@ public class WizardMovement : MonoBehaviour
         {
             audioManager.reproducirEfecto(audioManager.andar);
         }
+
+        if (Input.GetKey(KeyCode.C) && Time.time > LastShoot + 0.75f) {
+            Shoot();
+            LastShoot = Time.time;
+        }
+    }
+
+    private void Shoot() { //DISPARO
+
+        Vector3 direction;
+
+        if(transform.localScale.x == 1.0f ) {
+            direction = Vector2.right; 
+        } else {
+            direction = Vector2.left;
+        }
+
+
+    GameObject fireball_shot = Instantiate(fireball, transform.position + direction * 0.1f, Quaternion.identity);
+    fireball_shot.GetComponent<fireball>().SetDirection(direction); //Del script de la bala
     }
 
     private void Jump() //SALTO
@@ -152,7 +174,7 @@ public class WizardMovement : MonoBehaviour
         if (vidaActual <= 0)
         {
             Morir();
-        } else //solo se reproduce el efecto de recibir danio si el golpe no lo mata
+        } else 
         {
             audioManager.reproducirEfecto(audioManager.recibirDanio);
         }
@@ -161,7 +183,7 @@ public class WizardMovement : MonoBehaviour
 
     void Morir()
     {
-        isDead = true; // Marcar que el personaje está muerto
+        isDead = true; 
 
         audioManager.reproducirEfecto(audioManager.muerteMago);
 
