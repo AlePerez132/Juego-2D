@@ -1,29 +1,55 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
-public class fireball : MonoBehaviour
+public class Fireball : MonoBehaviour
 {
     public float Speed;
     private Rigidbody2D Rigidbody2D;
     private Vector2 Direction;
+    public int damage = 5;
 
-  void Start() {
-    Rigidbody2D = GetComponent<Rigidbody2D>();
-    Debug.Log("Bala creada en: " + transform.position);
-}
+    void Start()
+    {
+        Rigidbody2D = GetComponent<Rigidbody2D>();
+        Debug.Log("Bala creada en: " + transform.position);
+    }
 
-    void FixedUpdate() {
-    Rigidbody2D.linearVelocity = Direction * Speed;
-}
+    void FixedUpdate()
+    {
+        Rigidbody2D.linearVelocity = Direction * Speed;
+    }
 
-   public void SetDirection(Vector2 direction) {
-    Direction = direction;
-    Debug.Log("Dirección asignada a la bala: " + Direction);
-}
+    public void SetDirection(Vector2 direction)
+    {
+        Direction = direction;
+        Debug.Log("Dirección asignada a la bala: " + Direction);
+    }
 
+   private void OnCollisionEnter2D(Collision2D collision)
+    {
+        switch (collision.gameObject.tag)
+        {
+            case "suelo":
+            case "limite":
+            case "plataformas":
+                Destroy(gameObject); 
+                break;
+            case "skeleton": 
+                Skeleton_Script enemigo = collision.gameObject.GetComponent<Skeleton_Script>();
+                if (enemigo != null)
+                {
+                    enemigo.RecibirDanio(damage); 
+                    Debug.Log("PUM");
+                }
+                Destroy(gameObject); 
+                break;
+            default:
+                //Otros
+                break;
+        }
+    }
 
-    public void DestroyFireball() {
-        Destroy(gameObject);
+    public void DestroyFireball()
+    {
+        Destroy(gameObject, 3.5f);
     }
 }

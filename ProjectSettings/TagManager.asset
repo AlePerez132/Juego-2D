@@ -10,6 +10,7 @@ TagManager:
   - plataformas
   - Audio
   - puerta
+  - fireball
   layers:
   - Default
   - TransparentFX

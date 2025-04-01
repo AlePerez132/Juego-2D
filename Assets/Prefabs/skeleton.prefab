@@ -161,6 +161,7 @@ MonoBehaviour:
     m_Bits: 64
   groundCheck: {fileID: 8926248680947264459}
   groundCheckDistance: 1.5
+  vida: 20
 --- !u!61 &508115990942442987
 BoxCollider2D:
   m_ObjectHideFlags: 0

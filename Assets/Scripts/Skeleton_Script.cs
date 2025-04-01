@@ -4,28 +4,27 @@ public class Skeleton_Script : MonoBehaviour
 {
     public GameObject Wizard;
     public float speed = 2.6f;
-    public float alturaPermitida = 2.0f; // Máxima diferencia de altura permitida para atacar
-    public LayerMask groundLayer; // Capa del suelo
+    public float alturaPermitida = 2.0f;
+    public LayerMask groundLayer;
     public Transform groundCheck;
     public float groundCheckDistance = 3.0f;
     private Animator anim;
+    public int vida = 20; 
 
     void Start()
-{
-    anim = GetComponent<Animator>();
-
-    if (Wizard == null) // Si no está asignado manualmente
     {
-        GameObject wizardEncontrado = GameObject.FindWithTag("Wizard"); 
-        if (wizardEncontrado != null)
+        anim = GetComponent<Animator>();
+
+        if (Wizard == null)
         {
-            Wizard = wizardEncontrado;
+            GameObject wizardEncontrado = GameObject.FindWithTag("Wizard");
+            if (wizardEncontrado != null)
+            {
+                Wizard = wizardEncontrado;
+            }
         }
     }
-}
 
-
-    // Método que detecta si hay suelo delante
     private bool HaySueloDelante()
     {
         if (groundCheck == null)
@@ -39,34 +38,29 @@ public class Skeleton_Script : MonoBehaviour
 
     void Update()
     {
-
         RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
         
         Vector3 direccion = Wizard.transform.position - transform.position;
         float distancia = direccion.magnitude;
-        float diferenciaAltura = Mathf.Abs(Wizard.transform.position.y - transform.position.y); // Diferencia en altura
+        float diferenciaAltura = Mathf.Abs(Wizard.transform.position.y - transform.position.y);
 
         anim.SetFloat("Distance", distancia);
 
-        // Verifica si la diferencia de altura es aceptable antes de atacar
         if (distancia <= 1.8f && diferenciaAltura <= alturaPermitida)
         {
-            anim.SetTrigger("Attack"); // Iniciar ataque
+            anim.SetTrigger("Attack");
         }
-        else if (distancia < 15.0f && HaySueloDelante()) //&& diferenciaAltura <= alturaPermitida)
+        else if (distancia < 15.0f && HaySueloDelante())
         {
-            // Si está en rango y hay suelo, caminar hacia el jugador
-            direccion.y = 0; // Evita movimiento vertical
+            direccion.y = 0;
             transform.position += direccion.normalized * speed * Time.deltaTime;
-            anim.SetFloat("Speed", speed); // Cambia animación a "Walk"
+            anim.SetFloat("Speed", speed);
         }
         else
         {
-            // Si está fuera del rango o en otra altura, quedarse quieto
-            anim.SetFloat("Speed", 0); // Cambia animación a "Idle"
+            anim.SetFloat("Speed", 0);
         }
 
-        // Voltear sprite si es necesario
         if (direccion.x >= 0.0f)
             transform.localScale = new Vector3(3.0f, 3.0f, 3.0f);
         else
@@ -74,14 +68,38 @@ public class Skeleton_Script : MonoBehaviour
     }
 
     public void HacerDanio()
-{
-    if (Wizard != null)
     {
-        WizardMovement wizardScript = Wizard.GetComponent<WizardMovement>();
-        if (wizardScript != null)
+        if (Wizard != null)
         {
-            wizardScript.RecibirDanio(8); 
+            WizardMovement wizardScript = Wizard.GetComponent<WizardMovement>();
+            if (wizardScript != null)
+            {
+                wizardScript.RecibirDanio(8);
+            }
         }
+    }
+
+    public void RecibirDanio(int cantidad)
+    {
+        vida -= cantidad;
+        if (vida <= 0)
+        {
+            Morir();
+        }
+    }
+
+    void Morir()
+    {
+        anim.SetTrigger("die");
+        Destroy(gameObject, 2.0f);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+{
+    if (collision.gameObject.CompareTag("fireball")) 
+    {
+        RecibirDanio(5); 
+        Destroy(collision.gameObject); 
     }
 }
 

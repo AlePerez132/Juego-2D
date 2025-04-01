@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class WizardMovement : MonoBehaviour
 {
@@ -80,22 +81,22 @@ public class WizardMovement : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.C) && Time.time > LastShoot + 0.75f) 
- {
-            Shoot();
+ {    
+
+            Animator.SetTrigger("ataque");
+            Invoke(nameof(Shoot), 0.2f); // Llama a Shoot después de 1 segundo
             LastShoot = Time.time;
+
         }
     }
 
    private void Shoot() {
-    Debug.Log("Intentando disparar...");
-
     if (fireball == null) {
         Debug.LogError("Error: No hay prefab asignado en el Inspector.");
         return;
     }
 
-    Vector3 direction;
-    Animator.SetTrigger("ataque");
+    Vector3 direction;  
 
     if (transform.localScale.x > 0.0f) {
         direction = Vector2.right;
@@ -103,10 +104,10 @@ public class WizardMovement : MonoBehaviour
         direction = Vector2.left;
     }
 
-    GameObject fireball_shot = Instantiate(fireball, transform.position + direction * 1.5f, Quaternion.identity);
+    GameObject fireball_shot = Instantiate(fireball, transform.position + direction * 0.2f, Quaternion.identity);
     Debug.Log("Bala instanciada en: " + fireball_shot.transform.position);
 
-    fireball_shot.GetComponent<fireball>().SetDirection(direction);
+    fireball_shot.GetComponent<Fireball>().SetDirection(direction);
 }
 
     private void Jump() //SALTO
@@ -197,12 +198,8 @@ public class WizardMovement : MonoBehaviour
     void Morir()
     {
         isDead = true; 
-
         audioManager.reproducirEfecto(audioManager.muerteMago);
-
         Animator.SetTrigger("muerte");
-
-        // Llamar a FinalizarMuerte después de 3 segundos 
         Invoke("FinalizarMuerte", 3f);
     }
 
