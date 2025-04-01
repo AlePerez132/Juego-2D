@@ -24,7 +24,7 @@ public class WizardMovement : MonoBehaviour
     private int vidaActual;
     public Image barraVida;
 
-    private bool isDead = false; 
+    private bool isDead = false;
 
     AudioManager audioManager;
 
@@ -32,13 +32,33 @@ public class WizardMovement : MonoBehaviour
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
-        vidaActual = maxVida;
+        if (PlayerPrefs.HasKey("vidaMago"))
+        {
+            vidaActual = PlayerPrefs.GetInt("vidaMago");
+            barraVida.fillAmount = (float)vidaActual / maxVida;
+            if (vidaActual > maxVida * 0.6f)
+            {
+                barraVida.color = Color.green;
+            }
+            else if (vidaActual > maxVida * 0.38f)
+            {
+                barraVida.color = Color.yellow;
+            }
+            else
+            {
+                barraVida.color = Color.red;
+            }
+        }
+        else
+        {
+            vidaActual = maxVida;
+        }
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
     void Update()
     {
-        if (isDead) return; 
+        if (isDead) return;
 
         Horizontal = Input.GetAxisRaw("Horizontal");
 
@@ -80,39 +100,47 @@ public class WizardMovement : MonoBehaviour
             audioManager.reproducirEfecto(audioManager.andar);
         }
 
-        if (Input.GetKeyDown(KeyCode.C) && Time.time > LastShoot + 0.75f) 
- {    
+        if (Input.GetKeyDown(KeyCode.C) && Time.time > LastShoot + 0.75f)
+        {
 
             Animator.SetTrigger("ataque");
             Invoke(nameof(Shoot), 0.2f); // Llama a Shoot después de 1 segundo
             LastShoot = Time.time;
+            if (Grounded)
+                Animator.SetTrigger("finsalto");
 
         }
     }
 
-   private void Shoot() {
-    if (fireball == null) {
-        Debug.LogError("Error: No hay prefab asignado en el Inspector.");
-        return;
+    private void Shoot()
+    {
+        if (fireball == null)
+        {
+            Debug.LogError("Error: No hay prefab asignado en el Inspector.");
+            return;
+        }
+
+        Vector3 direction;
+
+        if (transform.localScale.x > 0.0f)
+        {
+            direction = Vector2.right;
+        }
+        else
+        {
+            direction = Vector2.left;
+        }
+
+        GameObject fireball_shot = Instantiate(fireball, transform.position + direction * 0.2f, Quaternion.identity);
+        Debug.Log("Bala instanciada en: " + fireball_shot.transform.position);
+
+        fireball_shot.GetComponent<Fireball>().SetDirection(direction);
     }
-
-    Vector3 direction;  
-
-    if (transform.localScale.x > 0.0f) {
-        direction = Vector2.right;
-    } else {
-        direction = Vector2.left;
-    }
-
-    GameObject fireball_shot = Instantiate(fireball, transform.position + direction * 0.2f, Quaternion.identity);
-    Debug.Log("Bala instanciada en: " + fireball_shot.transform.position);
-
-    fireball_shot.GetComponent<Fireball>().SetDirection(direction);
-}
 
     private void Jump() //SALTO
     {
-        if (Input.GetKey(KeyCode.Space) && Time.time > LastShoot + 0.75f) {
+        if (Input.GetKey(KeyCode.Space) && Time.time > LastShoot + 0.75f)
+        {
             Shoot();
             LastShoot = Time.time;
         }
@@ -133,7 +161,7 @@ public class WizardMovement : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D colision)
     {
-        if (isDead) return; 
+        if (isDead) return;
 
         if (colision.gameObject.CompareTag("suelo") || colision.gameObject.CompareTag("plataformas"))
         {
@@ -165,9 +193,10 @@ public class WizardMovement : MonoBehaviour
     {
         if (isDead) return;
 
-        
+
         vidaActual -= cantidad;
         vidaActual = Mathf.Clamp(vidaActual, 0, maxVida); // Para que la vida no sea negativa
+        PlayerPrefs.SetInt("vidaMago", vidaActual);
 
         //Actualiza la barra de vida
         barraVida.fillAmount = (float)vidaActual / maxVida;
@@ -188,7 +217,8 @@ public class WizardMovement : MonoBehaviour
         if (vidaActual <= 0)
         {
             Morir();
-        } else 
+        }
+        else
         {
             audioManager.reproducirEfecto(audioManager.recibirDanio);
         }
@@ -197,7 +227,7 @@ public class WizardMovement : MonoBehaviour
 
     void Morir()
     {
-        isDead = true; 
+        isDead = true;
         audioManager.reproducirEfecto(audioManager.muerteMago);
         Animator.SetTrigger("muerte");
         Invoke("FinalizarMuerte", 3f);
@@ -205,11 +235,11 @@ public class WizardMovement : MonoBehaviour
 
     void FinalizarMuerte()
     {
-        this.enabled = false;  
+        this.enabled = false;
         Rigidbody2D.linearVelocity = Vector2.zero;  //Se detiene el movimiento
         Rigidbody2D.isKinematic = true;  //Evita que siga afectado por la gravedad
         DesactivarCollider();
-        Animator.enabled = false; 
+        Animator.enabled = false;
 
         Invoke("SalirDelJuego", 3f);
     }
@@ -221,6 +251,6 @@ public class WizardMovement : MonoBehaviour
 
     void SalirDelJuego()
     {
-        Application.Quit(); 
+        Application.Quit();
     }
 }
