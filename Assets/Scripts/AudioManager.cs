@@ -57,14 +57,14 @@ public class AudioManager : MonoBehaviour
 
     private void OnSceneLoadedEvent(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
     {
-        cambiarMusica(scene.name); // Llama al método pasando el nombre de la escena
+        cambiarMusica(scene.name); 
     }
 
     private void MusicaInicial()
     {
         if (musicSource.clip == null)
         {
-            cambiarMusica("MainMenu"); // Usa el método unificado
+            cambiarMusica("MainMenu"); 
         }
     }
 
@@ -87,7 +87,7 @@ public class AudioManager : MonoBehaviour
                 break;
 
             default:
-                clipSeleccionado = musicaLobby; // Música por defecto
+                clipSeleccionado = musicaLobby; // Mï¿½sica por defecto
                 break;
         }
 

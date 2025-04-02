@@ -13,6 +13,7 @@ public class Fireball : MonoBehaviour
         Debug.Log("Bala creada en: " + transform.position);
     }
 
+
     void FixedUpdate()
     {
         Rigidbody2D.linearVelocity = Direction * Speed;
@@ -23,30 +24,30 @@ public class Fireball : MonoBehaviour
         Direction = direction;
         Debug.Log("Dirección asignada a la bala: " + Direction);
     }
+private void OnTriggerEnter2D(Collider2D collision)
+{
+    Debug.Log("Colisión detectada con: " + collision.gameObject.name);
 
-   private void OnCollisionEnter2D(Collision2D collision)
+    switch (collision.gameObject.tag)
     {
-        switch (collision.gameObject.tag)
-        {
-            case "suelo":
-            case "limite":
-            case "plataformas":
-                Destroy(gameObject); 
-                break;
-            case "skeleton": 
-                Skeleton_Script enemigo = collision.gameObject.GetComponent<Skeleton_Script>();
-                if (enemigo != null)
-                {
-                    enemigo.RecibirDanio(damage); 
-                    Debug.Log("PUM");
-                }
-                Destroy(gameObject); 
-                break;
-            default:
-                //Otros
-                break;
-        }
+        case "suelo":
+        case "limite":
+        case "plataformas":
+            Destroy(gameObject);
+            break;
+        case "skeleton":
+            Skeleton_Script enemigo = collision.gameObject.GetComponent<Skeleton_Script>();
+            if (enemigo != null)
+            {
+                enemigo.RecibirDanio(damage);
+            }
+            Destroy(gameObject);
+            break;
+        default:
+            Debug.Log("Otro objeto detectado: " + collision.gameObject.tag);
+            break;
     }
+}
 
     public void DestroyFireball()
     {

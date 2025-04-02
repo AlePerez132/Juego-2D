@@ -91,16 +91,18 @@ public class Skeleton_Script : MonoBehaviour
     void Morir()
     {
         anim.SetTrigger("die");
-        Destroy(gameObject, 2.0f);
+        Destroy(gameObject, 0.8f);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
 {
     if (collision.gameObject.CompareTag("fireball")) 
     {
         RecibirDanio(5); 
         Destroy(collision.gameObject); 
+        Debug.Log("Esqueleto recibió daño!");
     }
 }
 
 }
+

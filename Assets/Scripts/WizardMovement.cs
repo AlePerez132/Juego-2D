@@ -167,7 +167,6 @@ public class WizardMovement : MonoBehaviour
         {
             groundCollisionCount++;
             Grounded = true;
-            //audioManager.reproducirEfecto(audioManager.caer); se ejecuta varias veces al andar, no entiendo por que
         }
 
         if (colision.gameObject.CompareTag("skeleton"))
