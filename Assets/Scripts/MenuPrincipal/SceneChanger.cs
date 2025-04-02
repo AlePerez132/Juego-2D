@@ -1,13 +1,28 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using TMPro;
 
 public class CambiarEscena : MonoBehaviour
 {
     private string nombreEscena = "Escena1"; // Nombre de la escena a cargar
+    public ButtonManager buttonManager;
 
     public void CambiarDeEscena()
     {
+        switch (buttonManager.dificultad)
+        {
+            case "facil":
+                PlayerPrefs.SetInt("vidaMax", 200);
+                break;
+            case "normal":
+                PlayerPrefs.SetInt("vidaMax", 100);
+                break;
+            case "dificil":
+                PlayerPrefs.SetInt("vidaMax", 50);
+                break;
+        }
+        PlayerPrefs.SetInt("vidaMago", PlayerPrefs.GetInt("vidaMax"));
         StartCoroutine(CambiarEscenaDespuesDeSonido());
     }
 

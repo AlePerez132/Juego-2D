@@ -9,7 +9,9 @@ public class Skeleton_Script : MonoBehaviour
     public Transform groundCheck;
     public float groundCheckDistance = 3.0f;
     private Animator anim;
-    public int vida = 20; 
+    public int vida = 20;
+
+    AudioManager audioManager;
 
     void Start()
     {
@@ -23,6 +25,7 @@ public class Skeleton_Script : MonoBehaviour
                 Wizard = wizardEncontrado;
             }
         }
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
     private bool HaySueloDelante()
@@ -49,6 +52,10 @@ public class Skeleton_Script : MonoBehaviour
         if (distancia <= 1.8f && diferenciaAltura <= alturaPermitida)
         {
             anim.SetTrigger("Attack");
+            if (!audioManager.SFXSource.isPlaying)
+            {
+                audioManager.reproducirEfecto(audioManager.espadazo);
+            }
         }
         else if (distancia < 15.0f && HaySueloDelante())
         {
@@ -86,11 +93,16 @@ public class Skeleton_Script : MonoBehaviour
         {
             Morir();
         }
+        else
+        {
+            audioManager.reproducirEfecto(audioManager.esqueletoRecibirDanio);
+        }
     }
 
     void Morir()
     {
         anim.SetTrigger("die");
+        audioManager.reproducirEfecto(audioManager.muerteEnemigo);
         Destroy(gameObject, 0.8f);
     }
 

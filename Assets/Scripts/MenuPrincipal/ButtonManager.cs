@@ -1,20 +1,72 @@
 using UnityEngine;
-using UnityEngine.UI; 
+using UnityEngine.UI;
 
 
 public class ButtonManager : MonoBehaviour
 {
+    public string dificultad;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public GameObject botonFacil;
+    public GameObject botonNormal;
+    public GameObject botonDificil;
+
+    Button btnFacil;
+    Button btnNormal;
+    Button btnDificil;
+
+    //200 de vida en facil, 100 en normal y 50 en dificil
     void Start()
     {
-        PlayerPrefs.SetInt("vidaMago", 100); //DEBERIA DEPENDER DE LA DIFICULTAD ESCOGIDA
+
+        btnFacil = botonFacil.GetComponent<Button>();
+        btnNormal = botonNormal.GetComponent<Button>();
+        btnDificil = botonDificil.GetComponent<Button>();
+
+        btnFacil.interactable = true;
+        btnNormal.interactable = true;
+        btnDificil.interactable = true;
+
+
+        if (!PlayerPrefs.HasKey("vidaMax"))
+        {
+            dificultad = "facil";
+        }
+        else
+        {
+            int vidaMax = PlayerPrefs.GetInt("vidaMax");
+            switch (vidaMax)
+            {
+                case 200:
+                    dificultad = "facil";
+                    break;
+                case 100:
+                    dificultad = "normal";
+                    break;
+                case 50:
+                    dificultad = "dificil";
+                    break;
+            }
+        }
+
+
+        switch (dificultad)
+        {
+            case "facil":
+                btnFacil.interactable = false;
+                break;
+            case "normal":
+                btnNormal.interactable = false;
+                break;
+            case "dificil":
+                btnDificil.interactable = false;
+                break;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void ExitGame()
@@ -22,9 +74,9 @@ public class ButtonManager : MonoBehaviour
         Application.Quit();
         // Esto solo funciona en el juego compilado.
         // En el editor de Unity, puedes usar:
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-        #endif
+#endif
     }
 
     public void ApareceMenuOpciones()
@@ -48,7 +100,8 @@ public class ButtonManager : MonoBehaviour
         rectTransform.anchoredPosition = new Vector2(0, 50);
     }
 
-    public void CerrarPopupSalir(){
+    public void CerrarPopupSalir()
+    {
         GameObject popup = GameObject.Find("Pop-up salir");
         RectTransform rectTransform = popup.GetComponent<RectTransform>();
         rectTransform.anchoredPosition = new Vector2(1000, 1000);
@@ -84,5 +137,29 @@ public class ButtonManager : MonoBehaviour
         RectTransform rectTransform = popup.GetComponent<RectTransform>();
         rectTransform.anchoredPosition = new Vector2(-1500, 1500);
         ApareceMenuOpciones();
+    }
+
+    public void PulsarBotonFacil()
+    {
+        dificultad = "facil";
+        btnNormal.interactable = true;
+        btnFacil.interactable = false;
+        btnDificil.interactable = true;
+    }
+
+    public void PulsarBotonNormal()
+    {
+        dificultad = "normal";
+        btnNormal.interactable = false;
+        btnFacil.interactable = true;
+        btnDificil.interactable = true;
+    }
+
+    public void PulsarBotonDificil()
+    {
+        dificultad = "dificil";
+        btnNormal.interactable = true;
+        btnFacil.interactable = true;
+        btnDificil.interactable = false;
     }
 }
