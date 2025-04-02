@@ -37,7 +37,7 @@ public class DoorOpen : MonoBehaviour
 
     IEnumerator OpenDoorAndChangeScene()
     {
-        yield return new WaitForSeconds(0.5f);  //Esperar 1 segundo
+        yield return new WaitForSeconds(0.5f); 
 
         SceneManager.LoadScene("Escena2");  
         Debug.Log("Cambio de escena realizado.");

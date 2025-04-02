@@ -7,6 +7,7 @@ public class WizardMovement : MonoBehaviour
     public GameObject fireball;
     public float velocidad = 5f;
     public float JumpForce = 150f;
+    public float saltodanio = 500f;
 
     private Rigidbody2D Rigidbody2D;
     private float Horizontal;
@@ -20,11 +21,12 @@ public class WizardMovement : MonoBehaviour
     private float jumpBufferCounter;
     private float LastShoot;
 
-    public int maxVida = 200;
+    public int maxVida = 400;
     private int vidaActual;
     public Image barraVida;
 
     private bool isDead = false;
+    private bool isInWater = false;
 
     AudioManager audioManager;
 
@@ -32,15 +34,22 @@ public class WizardMovement : MonoBehaviour
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
+        vidaActual = maxVida;
+
         if (PlayerPrefs.HasKey("vidaMago"))
         {
             vidaActual = PlayerPrefs.GetInt("vidaMago");
             barraVida.fillAmount = (float)vidaActual / maxVida;
-            if (vidaActual > maxVida * 0.6f)
+
+            if (vidaActual > maxVida * 0.75f)
             {
                 barraVida.color = Color.green;
             }
-            else if (vidaActual > maxVida * 0.38f)
+            else if (vidaActual > maxVida * 0.5f && vidaActual < maxVida * 0.75f)
+            {
+                barraVida.color = new Color(1f, 0.647f, 0f);
+            }
+            else if (vidaActual > maxVida * 0.3f && vidaActual < maxVida * 0.5f)
             {
                 barraVida.color = Color.yellow;
             }
@@ -53,6 +62,7 @@ public class WizardMovement : MonoBehaviour
         {
             vidaActual = maxVida;
         }
+
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
@@ -102,13 +112,11 @@ public class WizardMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.C) && Time.time > LastShoot + 0.75f)
         {
-
             Animator.SetTrigger("ataque");
-            Invoke(nameof(Shoot), 0.2f); // Llama a Shoot después de 1 segundo
+            Invoke(nameof(Shoot), 0.2f);
             LastShoot = Time.time;
             if (Grounded)
                 Animator.SetTrigger("finsalto");
-
         }
     }
 
@@ -120,24 +128,13 @@ public class WizardMovement : MonoBehaviour
             return;
         }
 
-        Vector3 direction;
-
-        if (transform.localScale.x > 0.0f)
-        {
-            direction = Vector2.right;
-        }
-        else
-        {
-            direction = Vector2.left;
-        }
+        Vector3 direction = transform.localScale.x > 0.0f ? Vector2.right : Vector2.left;
 
         GameObject fireball_shot = Instantiate(fireball, transform.position + direction * 0.2f, Quaternion.identity);
-        Debug.Log("Bala instanciada en: " + fireball_shot.transform.position);
-
         fireball_shot.GetComponent<Fireball>().SetDirection(direction);
     }
 
-    private void Jump() //SALTO
+    private void Jump()
     {
         if (Input.GetKey(KeyCode.Space) && Time.time > LastShoot + 0.75f)
         {
@@ -145,8 +142,17 @@ public class WizardMovement : MonoBehaviour
             LastShoot = Time.time;
         }
 
-        Rigidbody2D.linearVelocity = new Vector2(Rigidbody2D.linearVelocity.x, 0);
-        Rigidbody2D.AddForce(Vector2.up * JumpForce);
+        if (isInWater)
+        {
+            Rigidbody2D.linearVelocity = new Vector2(Rigidbody2D.linearVelocity.x, 0);
+            Rigidbody2D.AddForce(Vector2.up * JumpForce * 0.8f);
+        }
+        else
+        {
+            Rigidbody2D.linearVelocity = new Vector2(Rigidbody2D.linearVelocity.x, 0);
+            Rigidbody2D.AddForce(Vector2.up * JumpForce);
+        }
+
         Grounded = false;
         Animator.SetTrigger("Jump");
         audioManager.reproducirEfecto(audioManager.salto);
@@ -154,7 +160,7 @@ public class WizardMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (isDead) return; // Si está muerto, no actualizamos el movimiento
+        if (isDead) return;
 
         Rigidbody2D.linearVelocity = new Vector2(Horizontal * velocidad, Rigidbody2D.linearVelocity.y);
     }
@@ -163,21 +169,34 @@ public class WizardMovement : MonoBehaviour
     {
         if (isDead) return;
 
-        if (colision.gameObject.CompareTag("suelo") || colision.gameObject.CompareTag("plataformas"))
+        switch (colision.gameObject.tag)
         {
-            groundCollisionCount++;
-            Grounded = true;
-        }
-
-        if (colision.gameObject.CompareTag("skeleton"))
-        {
-            RecibirDanio(15);
+            case "suelo":
+            case "limite":
+            case "plataformas":
+                groundCollisionCount++;
+                Grounded = true;
+                break;
+            case "skeleton":
+                RecibirDanio(15);
+                break;
+            case "peligro":
+                RecibirDanio(10);
+                saltoDeDanio();
+                break;
+            case "agua":
+                if (!isInWater)
+                {
+                    isInWater = true;
+                    StartCoroutine(RecibirDanioAgua());
+                }
+                break;
         }
     }
 
     void OnCollisionExit2D(Collision2D colision)
     {
-        if (colision.gameObject.CompareTag("suelo") || colision.gameObject.CompareTag("plataformas"))
+        if (colision.gameObject.CompareTag("suelo") || colision.gameObject.CompareTag("plataformas") || colision.gameObject.CompareTag("agua"))
         {
             groundCollisionCount--;
             if (groundCollisionCount <= 0)
@@ -185,26 +204,52 @@ public class WizardMovement : MonoBehaviour
                 Grounded = false;
                 groundCollisionCount = 0;
             }
+
+            if (colision.gameObject.CompareTag("agua"))
+            {
+                isInWater = false;
+            }
         }
+    }
+
+    private IEnumerator RecibirDanioAgua()
+    {
+        while (isInWater)
+        {
+            RecibirDanio(4);
+            yield return new WaitForSeconds(0.5f);
+            audioManager.reproducirEfecto(audioManager.recibirDanio);
+        }
+    }
+
+    private void saltoDeDanio()
+    {
+        Rigidbody2D.linearVelocity = new Vector2(Rigidbody2D.linearVelocity.x, 0);
+        Rigidbody2D.AddForce(Vector2.up * saltodanio * 3);
+        Grounded = false;
+        Animator.SetTrigger("Jump");
     }
 
     public void RecibirDanio(int cantidad)
     {
         if (isDead) return;
 
-
         vidaActual -= cantidad;
-        vidaActual = Mathf.Clamp(vidaActual, 0, maxVida); // Para que la vida no sea negativa
+        vidaActual = Mathf.Clamp(vidaActual, 0, maxVida);
+        Animator.SetTrigger("danio");
         PlayerPrefs.SetInt("vidaMago", vidaActual);
 
-        //Actualiza la barra de vida
         barraVida.fillAmount = (float)vidaActual / maxVida;
 
-        if (vidaActual > maxVida * 0.6f)
+        if (vidaActual > maxVida * 0.75f)
         {
             barraVida.color = Color.green;
         }
-        else if (vidaActual > maxVida * 0.38f)
+        else if (vidaActual > maxVida * 0.5f && vidaActual < maxVida * 0.75f)
+        {
+            barraVida.color = new Color(1f, 0.647f, 0f);
+        }
+        else if (vidaActual > maxVida * 0.3f && vidaActual < maxVida * 0.5f)
         {
             barraVida.color = Color.yellow;
         }
@@ -223,20 +268,19 @@ public class WizardMovement : MonoBehaviour
         }
     }
 
-
     void Morir()
     {
         isDead = true;
         audioManager.reproducirEfecto(audioManager.muerteMago);
         Animator.SetTrigger("muerte");
-        Invoke("FinalizarMuerte", 3f);
+        Invoke("FinalizarMuerte", 2f);
     }
 
     void FinalizarMuerte()
     {
         this.enabled = false;
-        Rigidbody2D.linearVelocity = Vector2.zero;  //Se detiene el movimiento
-        Rigidbody2D.isKinematic = true;  //Evita que siga afectado por la gravedad
+        Rigidbody2D.linearVelocity = Vector2.zero;  
+        Rigidbody2D.isKinematic = true;  
         DesactivarCollider();
         Animator.enabled = false;
 
@@ -253,3 +297,4 @@ public class WizardMovement : MonoBehaviour
         Application.Quit();
     }
 }
+   

@@ -26,7 +26,6 @@ public class Fireball : MonoBehaviour
     }
 private void OnTriggerEnter2D(Collider2D collision)
 {
-    Debug.Log("Colisión detectada con: " + collision.gameObject.name);
 
     switch (collision.gameObject.tag)
     {
