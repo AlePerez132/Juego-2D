@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 
 public class ButtonManager : MonoBehaviour
@@ -13,6 +14,8 @@ public class ButtonManager : MonoBehaviour
     Button btnFacil;
     Button btnNormal;
     Button btnDificil;
+
+    public TMP_Text textoDificultad;
 
     //200 de vida en facil, 100 en normal y 50 en dificil
     void Start()
@@ -29,6 +32,7 @@ public class ButtonManager : MonoBehaviour
 
         if (!PlayerPrefs.HasKey("vidaMax"))
         {
+            PulsarBotonFacil();
             dificultad = "facil";
         }
         else
@@ -36,30 +40,16 @@ public class ButtonManager : MonoBehaviour
             int vidaMax = PlayerPrefs.GetInt("vidaMax");
             switch (vidaMax)
             {
+                case 400:
+                    PulsarBotonFacil();
+                    break;
                 case 200:
-                    dificultad = "facil";
+                    PulsarBotonNormal();
                     break;
                 case 100:
-                    dificultad = "normal";
-                    break;
-                case 50:
-                    dificultad = "dificil";
+                    PulsarBotonDificil();
                     break;
             }
-        }
-
-
-        switch (dificultad)
-        {
-            case "facil":
-                btnFacil.interactable = false;
-                break;
-            case "normal":
-                btnNormal.interactable = false;
-                break;
-            case "dificil":
-                btnDificil.interactable = false;
-                break;
         }
     }
 
@@ -142,24 +132,20 @@ public class ButtonManager : MonoBehaviour
     public void PulsarBotonFacil()
     {
         dificultad = "facil";
-        btnNormal.interactable = true;
-        btnFacil.interactable = false;
-        btnDificil.interactable = true;
+        textoDificultad.text = "Has elegido la dificultad fácil, empezarás con 400 de vida";
     }
 
     public void PulsarBotonNormal()
     {
         dificultad = "normal";
-        btnNormal.interactable = false;
-        btnFacil.interactable = true;
-        btnDificil.interactable = true;
+        textoDificultad.text = "Has elegido la dificultad normal, empezarás con 200 de vida";
     }
 
     public void PulsarBotonDificil()
     {
         dificultad = "dificil";
-        btnNormal.interactable = true;
-        btnFacil.interactable = true;
-        btnDificil.interactable = false;
+        textoDificultad.text = "Has elegido la dificultad difícil, empezarás con 100 de vida";
     }
+
+    
 }

@@ -13,16 +13,16 @@ public class CambiarEscena : MonoBehaviour
         switch (buttonManager.dificultad)
         {
             case "facil":
-                PlayerPrefs.SetInt("vidaMax", 200);
+                PlayerPrefs.SetInt("vidaMax", 400);
                 break;
             case "normal":
-                PlayerPrefs.SetInt("vidaMax", 100);
+                PlayerPrefs.SetInt("vidaMax", 200);
                 break;
             case "dificil":
-                PlayerPrefs.SetInt("vidaMax", 50);
+                PlayerPrefs.SetInt("vidaMax", 100);
                 break;
         }
-        PlayerPrefs.SetInt("vidaMago", PlayerPrefs.GetInt("vidaMax"));
+        PlayerPrefs.SetInt("vidaActual", PlayerPrefs.GetInt("vidaMax"));
         StartCoroutine(CambiarEscenaDespuesDeSonido());
     }
 

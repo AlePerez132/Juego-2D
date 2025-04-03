@@ -34,13 +34,15 @@ public class WizardMovement : MonoBehaviour
     {
         Rigidbody2D = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
-<<<<<<< Updated upstream
-        vidaActual = maxVida;
-
-        if (PlayerPrefs.HasKey("vidaMago"))
-=======
+        if (!PlayerPrefs.HasKey("vidaMax"))
+        {
+            maxVida = 400;
+        }
+        else
+        {
+            maxVida = PlayerPrefs.GetInt("vidaMax");
+        }
         if (PlayerPrefs.HasKey("vidaActual"))
->>>>>>> Stashed changes
         {
             vidaActual = PlayerPrefs.GetInt("vidaActual");
             barraVida.fillAmount = (float)vidaActual / maxVida;
@@ -239,14 +241,9 @@ public class WizardMovement : MonoBehaviour
         if (isDead) return;
 
         vidaActual -= cantidad;
-<<<<<<< Updated upstream
-        vidaActual = Mathf.Clamp(vidaActual, 0, maxVida);
         Animator.SetTrigger("danio");
-        PlayerPrefs.SetInt("vidaMago", vidaActual);
-=======
         vidaActual = Mathf.Clamp(vidaActual, 0, maxVida); // Para que la vida no sea negativa
         PlayerPrefs.SetInt("vidaActual", vidaActual);
->>>>>>> Stashed changes
 
         barraVida.fillAmount = (float)vidaActual / maxVida;
 
