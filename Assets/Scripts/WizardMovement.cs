@@ -51,13 +51,14 @@ public class WizardMovement : MonoBehaviour
             {
                 barraVida.color = Color.green;
             }
-            else if (vidaActual > maxVida * 0.5f && vidaActual < maxVida * 0.75f)
-            {
-                barraVida.color = new Color(1f, 0.647f, 0f);
-            }
-            else if (vidaActual > maxVida * 0.3f && vidaActual < maxVida * 0.5f)
+            else if (vidaActual > maxVida * 0.5f && vidaActual <= maxVida * 0.75f)
             {
                 barraVida.color = Color.yellow;
+
+            }
+            else if (vidaActual > maxVida * 0.3f && vidaActual <= maxVida * 0.5f)
+            {
+                barraVida.color = new Color(1f, 0.647f, 0f);
             }
             else
             {
@@ -251,13 +252,14 @@ public class WizardMovement : MonoBehaviour
         {
             barraVida.color = Color.green;
         }
-        else if (vidaActual > maxVida * 0.5f && vidaActual < maxVida * 0.75f)
-        {
-            barraVida.color = new Color(1f, 0.647f, 0f);
-        }
-        else if (vidaActual > maxVida * 0.3f && vidaActual < maxVida * 0.5f)
+        else if (vidaActual > maxVida * 0.5f && vidaActual <= maxVida * 0.75f)
         {
             barraVida.color = Color.yellow;
+            
+        }
+        else if (vidaActual > maxVida * 0.3f && vidaActual <= maxVida * 0.5f)
+        {
+            barraVida.color = new Color(1f, 0.647f, 0f);
         }
         else
         {
