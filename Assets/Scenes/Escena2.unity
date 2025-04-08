@@ -922,6 +922,7 @@ GameObject:
   - component: {fileID: 806532324}
   - component: {fileID: 806532323}
   - component: {fileID: 806532327}
+  - component: {fileID: 806532328}
   m_Layer: 0
   m_Name: Enemigo angel
   m_TagString: Untagged
@@ -1094,6 +1095,24 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &806532328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 806532322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0447f9de1a046524ab1a651ef97464ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Trigger: {fileID: 1184619957}
+  bossFight: 0
+  swordPrefabs:
+  - {fileID: 4603940064428459495, guid: 779b289a5d478904c8abf6fe2921654f, type: 3}
+  - {fileID: 5791079749000777279, guid: 264c0e7040ff8ba41b8c2ee4b90addbb, type: 3}
+  - {fileID: 6763813636488087366, guid: a9205645d08b1c74d96db1ae4ffad12d, type: 3}
 --- !u!1 &850007096
 GameObject:
   m_ObjectHideFlags: 0
@@ -1130,6 +1149,7 @@ MonoBehaviour:
   fireball: {fileID: 4919901601599251589, guid: 47ae34a1592eb114d9085fb3377e3725, type: 3}
   velocidad: 5
   JumpForce: 400
+  saltodanio: 500
   maxVida: 100
   barraVida: {fileID: 1158542701}
 --- !u!70 &850007098
@@ -1609,6 +1629,7 @@ MonoBehaviour:
   posicionObjetivo: {x: 0, y: 0, z: 0}
   camara: {fileID: 110948875}
   duracionMovimiento: 0.5
+  bossFight: 0
 --- !u!1 &1197695017
 GameObject:
   m_ObjectHideFlags: 0

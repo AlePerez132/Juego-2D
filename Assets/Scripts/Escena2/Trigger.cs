@@ -7,11 +7,14 @@ public class Trigger : MonoBehaviour
     public Vector3 posicionObjetivo; // Posición final deseada
     public CameraScript camara;
     public float duracionMovimiento = 0.5f; // Tiempo que tarda en moverse
+    public bool bossFight = false;
 
     private bool enMovimiento = false; // Evita que el movimiento se active varias veces
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        bossFight = true;
+        Debug.Log("BossFight esta a true (TRIGGER)");
         if (other.CompareTag("Player") && !enMovimiento) // Solo mover si no está en movimiento
         {
             StartCoroutine(MoverObjeto(vallas, vallas.position, posicionObjetivo, duracionMovimiento));
