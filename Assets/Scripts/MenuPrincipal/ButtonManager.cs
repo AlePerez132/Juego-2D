@@ -129,6 +129,22 @@ public class ButtonManager : MonoBehaviour
         ApareceMenuOpciones();
     }
 
+    public void AparecePopupControles()
+    {
+        GameObject popup = GameObject.Find("Pop-up controles");
+        RectTransform rectTransform = popup.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = new Vector2(-0, 100);
+        CerrarMenuOpciones();
+    }
+
+    public void CerrarPopupControles()
+    {
+        GameObject popup = GameObject.Find("Pop-up controles");
+        RectTransform rectTransform = popup.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = new Vector2(-3000, 1500);
+        ApareceMenuOpciones();
+    }
+
     public void PulsarBotonFacil()
     {
         dificultad = "facil";
