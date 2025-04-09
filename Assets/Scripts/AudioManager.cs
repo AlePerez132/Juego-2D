@@ -24,6 +24,9 @@ public class AudioManager : MonoBehaviour
     public AudioClip lanzarBolaFuego;
     public AudioClip esqueletoRecibirDanio;
     public AudioClip impactoBolaFuego;
+    public AudioClip ataqueEspadasAngel;
+    public AudioClip angelRecibirDaño;
+    public AudioClip angelMuerte;
     [Header("MUSICA")]
     public AudioClip musicaLobby;
     public AudioClip musicaEscena1;

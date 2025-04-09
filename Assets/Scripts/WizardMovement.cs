@@ -144,6 +144,7 @@ public class WizardMovement : MonoBehaviour
 
         GameObject fireball_shot = Instantiate(fireball, transform.position + direction * 0.2f, Quaternion.identity);
         fireball_shot.GetComponent<Fireball>().SetDirection(direction);
+        audioManager.reproducirEfecto(audioManager.lanzarBolaFuego);
     }
 
     private void Jump()
@@ -292,7 +293,8 @@ public class WizardMovement : MonoBehaviour
     {
         this.enabled = false;
         Rigidbody2D.linearVelocity = Vector2.zero;
-        Rigidbody2D.isKinematic = true;
+        //Rigidbody2D.isKinematic = true;
+        Rigidbody2D.bodyType = RigidbodyType2D.Static;
         DesactivarCollider();
         Animator.enabled = false;
         ShowGameOverMenu();

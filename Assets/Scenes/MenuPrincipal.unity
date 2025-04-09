@@ -5585,7 +5585,10 @@ MonoBehaviour:
   muerteEnemigo: {fileID: 8300000, guid: f3825476e0bcfba4382185b045f70289, type: 3}
   lanzarBolaFuego: {fileID: 8300000, guid: f6033c582a11c6c47b67d23ce8b8aa1d, type: 3}
   esqueletoRecibirDanio: {fileID: 8300000, guid: b071d46f2c394ac41a23e3f8412688eb, type: 3}
-  impactoBolaFuego: {fileID: 8300000, guid: 3a28ed7e38395e9448f0512f23091831, type: 3}
+  impactoBolaFuego: {fileID: 8300000, guid: f525453de0a7d634f978261e450d7231, type: 3}
+  ataqueEspadasAngel: {fileID: 8300000, guid: dd695723d5fa39b4cb7763e0562d1f9a, type: 3}
+  "angelRecibirDa\xF1o": {fileID: 0}
+  angelMuerte: {fileID: 8300000, guid: 9afdb49726f83694d83f91af07419954, type: 3}
   musicaLobby: {fileID: 8300000, guid: 5cde6bdfb5c2003478545c5023802395, type: 3}
   musicaEscena1: {fileID: 8300000, guid: 6f161f996798b4b4c83a8e868728b781, type: 3}
   musicaEscena2: {fileID: 8300000, guid: 18cda75f06d0b474385a0060945882f9, type: 3}
