@@ -5,24 +5,28 @@ public class Angel : MonoBehaviour
 {
     public GameObject Trigger;
     public bool bossFight = false;
+    private bool corrutinaActiva = false;
+    private bool esperaInicialCompletada = false;
     public GameObject[] swordPrefabs;  // Array con los 3 prefabs de espadas
 
     private Trigger triggerScript;
+
+    private Animator anim;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         // Accede al script Trigger
         triggerScript = Trigger.GetComponent<Trigger>();
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
         bossFight = triggerScript.bossFight;
-        if (bossFight)
+        if (bossFight && !corrutinaActiva)
         {
-            Debug.Log("Bossfight esta a true (ANGEL)");
             // Si la pelea de boss ha comenzado, empezamos la secuencia
             StartCoroutine(BossFightSequence());
         }
@@ -31,31 +35,33 @@ public class Angel : MonoBehaviour
     // Corutina que maneja la secuencia de la pelea con el boss
     private IEnumerator BossFightSequence()
     {
+        corrutinaActiva = true;
         // Esperar 3 segundos
-        yield return new WaitForSeconds(3f);
-
-        Debug.Log("He esperado 3 segundos");
+        if (!esperaInicialCompletada)
+        {
+            yield return new WaitForSeconds(2.5f);
+            esperaInicialCompletada = true;
+        }
 
         // Instanciar el prefab aleatoriamente
         int randomIndex = Random.Range(0, swordPrefabs.Length);
         GameObject swordPattern = Instantiate(swordPrefabs[randomIndex], transform.position, Quaternion.identity);
-        Debug.Log("He instanciado el prefab");
 
         // Esperar 1 segundo después de instanciar el prefab
-        yield return new WaitForSeconds(1f);
-        Debug.Log("He esperado 1 segundo");
+        yield return new WaitForSeconds(0.75f);
 
+        anim.SetTrigger("Attack");
         // Aquí puedes agregar un Rigidbody a las espadas para que caigan
-        Rigidbody[] swords = swordPattern.GetComponentsInChildren<Rigidbody>();
+        Rigidbody2D[] swords = swordPattern.GetComponentsInChildren<Rigidbody2D>();
 
         // Hacer que las espadas caigan (activamos la gravedad en el Rigidbody)
-        foreach (Rigidbody sword in swords)
+        foreach (Rigidbody2D sword in swords)
         {
-            sword.isKinematic = false;  // Desactivamos el modo cinemático para permitir la caída
-            sword.AddForce(Vector3.down * 10f, ForceMode.Impulse);  // Fuerza para que caigan al suelo
+            sword.bodyType = RigidbodyType2D.Dynamic;
         }
-
-        // Si quieres que las espadas "bajen" aún más después de caer, puedes agregar más lógica
-        yield return new WaitForSeconds(2f);  // Espera que caigan completamente antes de terminar la secuencia
+        
+        yield return new WaitForSeconds(2.5f);  // Espera que caigan completamente antes de terminar la secuencia
+        Destroy(swordPattern);
+        corrutinaActiva = false;
     }
 }

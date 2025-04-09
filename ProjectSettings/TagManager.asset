@@ -12,6 +12,7 @@ TagManager:
   - puerta
   - fireball
   - agua
+  - espada
   layers:
   - Default
   - TransparentFX
