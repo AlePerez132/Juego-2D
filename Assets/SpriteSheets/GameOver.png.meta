@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 6606b75041064194d8d2159afefe89a3
+guid: dc3b835cfbbd9ed438811a9cce5fef64
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2925537189103952587
-    second: fire_sword_4_0
+      213: -6899527831451061053
+    second: GameOver_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: fire_sword_4_0
+      name: GameOver_0
       rect:
         serializedVersion: 2
-        x: 405
-        y: 35
-        width: 201
-        height: 943
+        x: 0
+        y: 0
+        width: 1024
+        height: 1024
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 53d934a3d676667d0800000000000000
-      internalID: -2925537189103952587
+      spriteID: 3c430781ef3ff30a0800000000000000
+      internalID: -6899527831451061053
       vertices: []
       indices: 
       edges: []
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      fire_sword_4_0: -2925537189103952587
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

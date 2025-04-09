@@ -41,37 +41,53 @@ public class Skeleton_Script : MonoBehaviour
 
     void Update()
     {
-        RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
-        
-        Vector3 direccion = Wizard.transform.position - transform.position;
-        float distancia = direccion.magnitude;
-        float diferenciaAltura = Mathf.Abs(Wizard.transform.position.y - transform.position.y);
-
-        anim.SetFloat("Distance", distancia);
-
-        if (distancia <= 1.8f && diferenciaAltura <= alturaPermitida)
         {
-            anim.SetTrigger("Attack");
-            if (!audioManager.SFXSource.isPlaying)
+            RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+
+            Vector3 direccion = Wizard.transform.position - transform.position;
+            float distancia = direccion.magnitude;
+            float diferenciaAltura = Mathf.Abs(Wizard.transform.position.y - transform.position.y);
+
+            anim.SetFloat("Distance", distancia);
+
+            if (distancia <= 1.8f && diferenciaAltura <= alturaPermitida)
             {
-                audioManager.reproducirEfecto(audioManager.espadazo);
+                anim.SetFloat("Speed", 0);
+                if (HaySueloDelante())
+                {
+                    transform.position += direccion.normalized * speed * Time.deltaTime;
+                }
             }
-        }
-        else if (distancia < 15.0f && HaySueloDelante())
-        {
-            direccion.y = 0;
-            transform.position += direccion.normalized * speed * Time.deltaTime;
-            anim.SetFloat("Speed", speed);
-        }
-        else
-        {
-            anim.SetFloat("Speed", 0);
+            else if (distancia < 1.8f && diferenciaAltura <= alturaPermitida && HaySueloDelante())
+            {
+                anim.SetFloat("Speed", 0);
+                transform.position += direccion.normalized * speed * Time.deltaTime;
+            }
+            else if (distancia < 1.8f && HaySueloDelante())
+            {
+                anim.SetTrigger("Attack");
+                if (!audioManager.SFXSource.isPlaying)
+                {
+                    audioManager.reproducirEfecto(audioManager.espadazo);
+                }
+            }
+            else if (distancia < 15.0f && HaySueloDelante())
+            {
+                direccion.y = 0;
+                transform.position += direccion.normalized * speed * Time.deltaTime;
+                anim.SetFloat("Speed", speed);
+            }
+            else
+            {
+                anim.SetFloat("Speed", 0);
+            }
+
+            if (direccion.x >= 0.0f)
+                transform.localScale = new Vector3(3.0f, 3.0f, 3.0f);
+            else
+                transform.localScale = new Vector3(-3.0f, 3.0f, 3.0f);
         }
 
-        if (direccion.x >= 0.0f)
-            transform.localScale = new Vector3(3.0f, 3.0f, 3.0f);
-        else
-            transform.localScale = new Vector3(-3.0f, 3.0f, 3.0f);
     }
 
     public void HacerDanio()
@@ -107,14 +123,14 @@ public class Skeleton_Script : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
-{
-    if (collision.gameObject.CompareTag("fireball")) 
     {
-        RecibirDanio(5); 
-        Destroy(collision.gameObject); 
-        Debug.Log("Esqueleto recibió daño!");
+        if (collision.gameObject.CompareTag("fireball"))
+        {
+            RecibirDanio(5);
+            Destroy(collision.gameObject);
+            Debug.Log("Esqueleto recibió daño!");
+        }
     }
-}
 
 }
 

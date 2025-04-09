@@ -5,6 +5,8 @@ using System.Collections;
 public class WizardMovement : MonoBehaviour
 {
     public GameObject fireball;
+    public GameObject gameOverMenu;
+    public GameObject camara;
     public float velocidad = 5f;
     public float JumpForce = 150f;
     public float saltodanio = 500f;
@@ -25,7 +27,7 @@ public class WizardMovement : MonoBehaviour
     private int vidaActual;
     public Image barraVida;
 
-    private bool isDead = false;
+    public bool isDead = false;
     private bool isInWater = false;
 
     AudioManager audioManager;
@@ -88,12 +90,14 @@ public class WizardMovement : MonoBehaviour
         Animator.SetBool("isGrounded", Grounded);
 
         if (Grounded)
+
         {
             coyoteTimeCounter = coyoteTime;
         }
         else
         {
             coyoteTimeCounter -= Time.deltaTime;
+            //Esto es para que no salte si no hay suelo
         }
 
         if (Input.GetKeyDown(KeyCode.W))
@@ -105,7 +109,8 @@ public class WizardMovement : MonoBehaviour
             jumpBufferCounter -= Time.deltaTime;
         }
 
-        if (jumpBufferCounter > 0f && coyoteTimeCounter > 0f)
+
+        if (jumpBufferCounter > 0f && (coyoteTimeCounter > 0f || isInWater))
         {
             Jump();
             jumpBufferCounter = 0f;
@@ -143,6 +148,7 @@ public class WizardMovement : MonoBehaviour
 
     private void Jump()
     {
+
         if (Input.GetKey(KeyCode.Space) && Time.time > LastShoot + 0.75f)
         {
             Shoot();
@@ -153,6 +159,7 @@ public class WizardMovement : MonoBehaviour
         {
             Rigidbody2D.linearVelocity = new Vector2(Rigidbody2D.linearVelocity.x, 0);
             Rigidbody2D.AddForce(Vector2.up * JumpForce * 0.8f);
+          
         }
         else
         {
@@ -192,11 +199,8 @@ public class WizardMovement : MonoBehaviour
                 saltoDeDanio();
                 break;
             case "agua":
-                if (!isInWater)
-                {
-                    isInWater = true;
-                    StartCoroutine(RecibirDanioAgua());
-                }
+                isInWater = true;
+                StartCoroutine(RecibirDanioAgua());
                 break;
         }
     }
@@ -255,7 +259,7 @@ public class WizardMovement : MonoBehaviour
         else if (vidaActual > maxVida * 0.5f && vidaActual <= maxVida * 0.75f)
         {
             barraVida.color = Color.yellow;
-            
+
         }
         else if (vidaActual > maxVida * 0.3f && vidaActual <= maxVida * 0.5f)
         {
@@ -287,12 +291,13 @@ public class WizardMovement : MonoBehaviour
     void FinalizarMuerte()
     {
         this.enabled = false;
-        Rigidbody2D.linearVelocity = Vector2.zero;  
-        Rigidbody2D.isKinematic = true;  
+        Rigidbody2D.linearVelocity = Vector2.zero;
+        Rigidbody2D.isKinematic = true;
         DesactivarCollider();
         Animator.enabled = false;
+        ShowGameOverMenu();
 
-        Invoke("SalirDelJuego", 3f);
+        //Invoke("SalirDelJuego", 3f);
     }
 
     void DesactivarCollider()
@@ -304,5 +309,13 @@ public class WizardMovement : MonoBehaviour
     {
         Application.Quit();
     }
+
+    void ShowGameOverMenu()
+    {
+        // Mover el menú a la posición de la cámara
+        Debug.Log("LLamando al menu game over");
+        Vector3 cameraPosition = camara.transform.position;
+        gameOverMenu.transform.position = new Vector3(cameraPosition.x, cameraPosition.y, gameOverMenu.transform.position.z);
+
+    }
 }
-   
