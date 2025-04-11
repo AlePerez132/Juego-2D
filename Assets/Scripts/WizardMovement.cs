@@ -203,6 +203,12 @@ public class WizardMovement : MonoBehaviour
                 isInWater = true;
                 StartCoroutine(RecibirDanioAgua());
                 break;
+                /*
+                 No funciona porque es un trigger
+            case "espada":
+                RecibirDanio(15);
+                break;
+                */
         }
     }
 

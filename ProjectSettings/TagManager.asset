@@ -13,6 +13,7 @@ TagManager:
   - fireball
   - agua
   - espada
+  - angel
   layers:
   - Default
   - TransparentFX

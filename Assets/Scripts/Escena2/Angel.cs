@@ -7,20 +7,28 @@ public class Angel : MonoBehaviour
     public bool bossFight = false;
     private bool corrutinaActiva = false;
     private bool esperaInicialCompletada = false;
+    private bool plataformasActivas = false;
 
     public GameObject[] swordPrefabs;  // Array con los 3 prefabs de espadas
 
     public GameObject plataformas;
-    public Vector3 plataformasAbajo = new Vector3(6.7f, -10f, 10f);
-    public Vector3 plataformasArriba = new Vector3(6.7f, -2.3f, 10f);
+
+    public Vector3 plataformasAbajo;
+    public Vector3 plataformasArriba;
     public float duracionMovimiento = 4f;
 
     private Trigger triggerScript;
     private Animator anim;
     private int contador = 0;
 
+    int vida = 30;
+    AudioManager audioManager;
+
     void Start()
     {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        plataformasAbajo = new Vector3(6.7f, -10f, 0f);
+        plataformasArriba = new Vector3(6.7f, -2.3f, 0f);
         triggerScript = Trigger.GetComponent<Trigger>();
         anim = GetComponent<Animator>();
     }
@@ -29,7 +37,7 @@ public class Angel : MonoBehaviour
     {
         bossFight = triggerScript.bossFight;
 
-        if (bossFight && !corrutinaActiva)
+        if (bossFight && !corrutinaActiva && !plataformasActivas) // Condición adicional para evitar conflicto
         {
             StartCoroutine(BossFightSequence());
         }
@@ -56,15 +64,16 @@ public class Angel : MonoBehaviour
         foreach (Rigidbody2D sword in swords)
         {
             sword.bodyType = RigidbodyType2D.Dynamic;
-            sword.gravityScale = 1.3f;
+            sword.gravityScale = 1.8f;
         }
 
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(2f);
 
         Destroy(swordPattern);
         contador++;
-        if (contador == 2)
+        if (contador == 4)
         {
+            plataformasActivas = true; // Activamos el estado de las plataformas
             contador = 0;
             StartCoroutine(MoverPlataformas());
         }
@@ -74,6 +83,8 @@ public class Angel : MonoBehaviour
 
     private IEnumerator MoverPlataformas()
     {
+        plataformasActivas = true; // Activamos para indicar que las plataformas están en movimiento
+
         float duracion = duracionMovimiento;
         float elapsed = 0f;
 
@@ -100,5 +111,28 @@ public class Angel : MonoBehaviour
             yield return null;
         }
         plataformas.transform.position = plataformasAbajo;
+
+        plataformasActivas = false; // Desactivamos el estado de plataformas al finalizar el movimiento
+    }
+
+    public void RecibirDanio(int cantidad)
+    {
+        vida -= cantidad;
+        if (vida <= 0)
+        {
+            Morir();
+        }
+        else
+        {
+            //audioManager.reproducirEfecto(audioManager.angelRecibirDaño); 
+            //aun no esta puesto este efecto de sonido
+        }
+    }
+
+    void Morir()
+    {
+        anim.SetTrigger("Death");
+        audioManager.reproducirEfecto(audioManager.angelMuerte);
+        Destroy(gameObject, 0.8f);
     }
 }

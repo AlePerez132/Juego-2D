@@ -6,9 +6,11 @@ public class Fireball : MonoBehaviour
     private Rigidbody2D Rigidbody2D;
     private Vector2 Direction;
     public int damage = 5;
+    AudioManager audioManager;
 
     void Start()
     {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         Rigidbody2D = GetComponent<Rigidbody2D>();
         Debug.Log("Bala creada en: " + transform.position);
     }
@@ -24,29 +26,37 @@ public class Fireball : MonoBehaviour
         Direction = direction;
         Debug.Log("Dirección asignada a la bala: " + Direction);
     }
-private void OnTriggerEnter2D(Collider2D collision)
-{
-
-    switch (collision.gameObject.tag)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        case "suelo":
-        case "limite":
-        case "plataformas":
-            Destroy(gameObject);
-            break;
-        case "skeleton":
-            Skeleton_Script enemigo = collision.gameObject.GetComponent<Skeleton_Script>();
-            if (enemigo != null)
-            {
-                enemigo.RecibirDanio(damage);
-            }
-            Destroy(gameObject);
-            break;
-        default:
-            Debug.Log("Otro objeto detectado: " + collision.gameObject.tag);
-            break;
+        audioManager.reproducirEfecto(audioManager.impactoBolaFuego);
+        switch (collision.gameObject.tag)
+        {
+            case "suelo":
+            case "limite":
+            case "plataformas":
+                Destroy(gameObject);
+                break;
+            case "skeleton":
+                Skeleton_Script enemigo = collision.gameObject.GetComponent<Skeleton_Script>();
+                if (enemigo != null)
+                {
+                    enemigo.RecibirDanio(damage);
+                }
+                Destroy(gameObject);
+                break;
+            case "angel":
+                Angel enemigo2 = collision.gameObject.GetComponent<Angel>();
+                if (enemigo2 != null)
+                {
+                    enemigo2.RecibirDanio(damage);
+                }
+                Destroy(gameObject);
+                break;
+            default:
+                Debug.Log("Otro objeto detectado: " + collision.gameObject.tag);
+                break;
+        }
     }
-}
 
     public void DestroyFireball()
     {
