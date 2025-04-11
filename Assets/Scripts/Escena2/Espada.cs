@@ -2,15 +2,32 @@ using UnityEngine;
 
 public class Espada : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public bool yaHizoDanio = false;
+    public GameObject Wizard;
+
+    private void Start()
     {
-        
+        if (Wizard == null)
+        {
+            GameObject wizardEncontrado = GameObject.FindWithTag("Player");
+            if (wizardEncontrado != null)
+            {
+                Wizard = wizardEncontrado;
+            }
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnTriggerEnter2D(Collider2D other)
     {
-        
+        // Verifica si el objeto que colisiona es el jugador y si aún no ha hecho daño
+        if (Wizard != null)
+        {
+            WizardMovement wizardScript = Wizard.GetComponent<WizardMovement>();
+            if (wizardScript != null && !yaHizoDanio)
+            {
+                wizardScript.RecibirDanio(8);
+                yaHizoDanio = true;  
+            }
+        }
     }
 }

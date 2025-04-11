@@ -63,7 +63,6 @@ public class Angel : MonoBehaviour
         Rigidbody2D[] swords = swordPattern.GetComponentsInChildren<Rigidbody2D>();
         foreach (Rigidbody2D sword in swords)
         {
-            sword.bodyType = RigidbodyType2D.Dynamic;
             sword.gravityScale = 1.8f;
         }
 
