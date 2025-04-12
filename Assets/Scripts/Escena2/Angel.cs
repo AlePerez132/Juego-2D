@@ -1,13 +1,22 @@
 using UnityEngine;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 public class Angel : MonoBehaviour
 {
+    public GameObject vallas;
+    private Vector3 posicionObjetivoVallas = new Vector3(0, -4, 10f);
+    public GameObject escaleras;
+    private Vector3 posicionObjetivoEscaleras = new Vector3(0, 0, 100f);
+
+    public CameraScript camara;
+
     public GameObject Trigger;
     public bool bossFight = false;
     private bool corrutinaActiva = false;
     private bool esperaInicialCompletada = false;
     private bool plataformasActivas = false;
+    private bool muerto = false;
 
     public GameObject[] swordPrefabs;  // Array con los 3 prefabs de espadas
 
@@ -24,6 +33,10 @@ public class Angel : MonoBehaviour
     int vida = 30;
     AudioManager audioManager;
 
+    private bool procesoMuerteActivo = false;
+    private bool corrutinaVallasTerminada = false;
+    private bool corrutinaEscalerasTerminada = false;
+
     void Start()
     {
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
@@ -35,11 +48,17 @@ public class Angel : MonoBehaviour
 
     void Update()
     {
+        
         bossFight = triggerScript.bossFight;
 
-        if (bossFight && !corrutinaActiva && !plataformasActivas) // Condición adicional para evitar conflicto
+        if (bossFight && !corrutinaActiva && !plataformasActivas && !muerto)
         {
             StartCoroutine(BossFightSequence());
+        }
+        else if (muerto && !procesoMuerteActivo)
+        {
+            PostMuerte();
+            procesoMuerteActivo = true;
         }
     }
 
@@ -54,7 +73,7 @@ public class Angel : MonoBehaviour
         }
 
         int randomIndex = Random.Range(0, swordPrefabs.Length);
-        GameObject swordPattern = Instantiate(swordPrefabs[randomIndex], transform.position, Quaternion.identity);
+        GameObject swordPattern = Instantiate(swordPrefabs[randomIndex], new Vector3(24.6f, -1, 0f), Quaternion.identity);
 
         yield return new WaitForSeconds(0.75f);
 
@@ -72,7 +91,7 @@ public class Angel : MonoBehaviour
         contador++;
         if (contador == 4)
         {
-            plataformasActivas = true; // Activamos el estado de las plataformas
+            plataformasActivas = true;
             contador = 0;
             StartCoroutine(MoverPlataformas());
         }
@@ -82,7 +101,7 @@ public class Angel : MonoBehaviour
 
     private IEnumerator MoverPlataformas()
     {
-        plataformasActivas = true; // Activamos para indicar que las plataformas están en movimiento
+        plataformasActivas = true; 
 
         float duracion = duracionMovimiento;
         float elapsed = 0f;
@@ -98,7 +117,7 @@ public class Angel : MonoBehaviour
         plataformas.transform.position = plataformasArriba;
 
         // Esperar 10 segundos arriba
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(8);
 
         // Movimiento de bajada
         elapsed = 0f;
@@ -132,6 +151,48 @@ public class Angel : MonoBehaviour
     {
         anim.SetTrigger("Death");
         audioManager.reproducirEfecto(audioManager.angelMuerte);
-        Destroy(gameObject, 0.8f);
+        if (corrutinaVallasTerminada && corrutinaEscalerasTerminada)
+        {
+            Destroy(gameObject, 0.8f);
+            muerto = true;
+        }
+    }
+
+    public void PostMuerte()
+    {
+        //para mover las vallas a su posicion original
+        MoverObjeto(vallas, vallas.transform.position, posicionObjetivoVallas, 0.5f);
+        //para subir las escaleras
+        MoverObjeto(escaleras, escaleras.transform.position, posicionObjetivoEscaleras, 0.5f);
+
+        if (camara != null)
+        {
+            camara.AjustarAlturaYZoom(0f, 0f, 0.5f); //para devolver la camara a su estado original
+        } else
+        {
+            Debug.LogWarning("Camara no asignada en el script Angel.");
+        }
+    }
+
+    IEnumerator MoverObjeto(GameObject objeto, Vector3 inicio, Vector3 destino, float duracion)
+    {
+        float tiempo = 0;
+
+        while (tiempo < duracion)
+        {
+            tiempo += Time.deltaTime;
+            objeto.transform.position = Vector3.Lerp(inicio, destino, tiempo / duracion);
+            yield return null; // Espera al siguiente frame
+        }
+
+        objeto.transform.position = destino; // Asegura la posición final
+        if (objeto == vallas)
+        {
+            corrutinaVallasTerminada = true;
+        }
+        else if (objeto == escaleras)
+        {
+            corrutinaEscalerasTerminada = true;
+        }
     }
 }

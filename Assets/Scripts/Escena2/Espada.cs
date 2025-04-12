@@ -25,7 +25,7 @@ public class Espada : MonoBehaviour
             WizardMovement wizardScript = Wizard.GetComponent<WizardMovement>();
             if (wizardScript != null && !yaHizoDanio)
             {
-                wizardScript.RecibirDanio(8);
+                wizardScript.RecibirDanio(1); //deberia ser 8, lo cambio pq da problemas
                 yaHizoDanio = true;  
             }
         }
