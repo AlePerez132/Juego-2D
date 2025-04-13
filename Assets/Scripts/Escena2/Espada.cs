@@ -17,17 +17,32 @@ public class Espada : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other) 
     {
-        // Verifica si el objeto que colisiona es el jugador y si a�n no ha hecho da�o
-        if (Wizard != null)
+        // Verifica si el objeto que colisiona es el jugador y si aun no ha hecho daño
+        if (other.CompareTag("Player") && !yaHizoDanio)
         {
             WizardMovement wizardScript = Wizard.GetComponent<WizardMovement>();
+            if (wizardScript != null)
+            {
+                wizardScript.RecibirDanio(10); // Llama al método de recibir daño en el script del jugador
+                yaHizoDanio = true; // Marca que ya se ha hecho daño
+            }
+        }
+    }
+    
+    /*{
+        WizardMovement wizardScript = Wizard.GetComponent<WizardMovement>();
+        // Verifica si el objeto que colisiona es el jugador y si aun no ha hecho daño
+        if (Wizard != null)
+        {
+            
             if (wizardScript != null && !yaHizoDanio)
             {
-                wizardScript.RecibirDanio(1); //deberia ser 8, lo cambio pq da problemas
+                wizardScript.RecibirDanio(2); 
                 yaHizoDanio = true;  
             }
         }
     }
+    */
 }

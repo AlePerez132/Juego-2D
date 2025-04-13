@@ -4,7 +4,7 @@ using System.Collections;
 public class Trigger : MonoBehaviour
 {
     public Transform vallas;
-    public Vector3 posicionObjetivo; // Posición final deseada
+    public Vector3 posicionObjetivo; // Posicion final deseada
     public CameraScript camara;
     public float duracionMovimiento = 0.5f; // Tiempo que tarda en moverse
     public bool bossFight = false;
@@ -15,7 +15,7 @@ public class Trigger : MonoBehaviour
     {
         bossFight = true;
         Debug.Log("BossFight esta a true (TRIGGER)");
-        if (other.CompareTag("Player") && !enMovimiento) // Solo mover si no está en movimiento
+        if (other.CompareTag("Player") && !enMovimiento) // Solo mover si no esta en movimiento
         {
             StartCoroutine(MoverObjeto(vallas, vallas.position, posicionObjetivo, duracionMovimiento));
 
@@ -38,7 +38,7 @@ public class Trigger : MonoBehaviour
             yield return null; // Espera al siguiente frame
         }
 
-        objeto.position = destino; // Asegura la posición final
+        objeto.position = destino; // Asegura la posicion final
         enMovimiento = false; // Permite otro movimiento si es necesario
     }
 }

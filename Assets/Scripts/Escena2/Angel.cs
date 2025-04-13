@@ -30,7 +30,7 @@ public class Angel : MonoBehaviour
     private Animator anim;
     private int contador = 0;
 
-    int vida = 30;
+    public int vida = 30;
     AudioManager audioManager;
 
     private bool procesoMuerteActivo = false;
@@ -117,7 +117,7 @@ public class Angel : MonoBehaviour
         plataformas.transform.position = plataformasArriba;
 
         // Esperar 10 segundos arriba
-        yield return new WaitForSeconds(8);
+        yield return new WaitForSeconds(6);
 
         // Movimiento de bajada
         elapsed = 0f;
@@ -142,7 +142,7 @@ public class Angel : MonoBehaviour
         }
         else
         {
-            //audioManager.reproducirEfecto(audioManager.angelRecibirDaño); 
+            //audioManager.reproducirEfecto(audioManager.angelRecibirDaï¿½o); 
             //aun no esta puesto este efecto de sonido
         }
     }
@@ -185,7 +185,7 @@ public class Angel : MonoBehaviour
             yield return null; // Espera al siguiente frame
         }
 
-        objeto.transform.position = destino; // Asegura la posición final
+        objeto.transform.position = destino; // Asegura la posiciï¿½n final
         if (objeto == vallas)
         {
             corrutinaVallasTerminada = true;
