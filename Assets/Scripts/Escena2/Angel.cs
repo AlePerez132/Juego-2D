@@ -1,13 +1,12 @@
 using UnityEngine;
 using System.Collections;
-using System.Runtime.CompilerServices;
 
 public class Angel : MonoBehaviour
 {
     public GameObject vallas;
-    private Vector3 posicionObjetivoVallas = new Vector3(0, -4, 10f);
+    private Vector3 posicionObjetivoVallas;
     public GameObject escaleras;
-    private Vector3 posicionObjetivoEscaleras = new Vector3(0, 0, 100f);
+    private Vector3 posicionObjetivoEscaleras;
 
     public CameraScript camara;
 
@@ -18,7 +17,7 @@ public class Angel : MonoBehaviour
     private bool plataformasActivas = false;
     private bool muerto = false;
 
-    public GameObject[] swordPrefabs;  // Array con los 3 prefabs de espadas
+    public GameObject[] swordPrefabs;
 
     public GameObject plataformas;
 
@@ -30,7 +29,7 @@ public class Angel : MonoBehaviour
     private Animator anim;
     private int contador = 0;
 
-    public int vida = 30;
+    public int vida;
     AudioManager audioManager;
 
     private bool procesoMuerteActivo = false;
@@ -39,16 +38,27 @@ public class Angel : MonoBehaviour
 
     void Start()
     {
+        posicionObjetivoVallas = new Vector3(0, -4, 10f);
+        posicionObjetivoEscaleras = new Vector3(0, 0, 0f);
+        vida = 30;
+
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         plataformasAbajo = new Vector3(6.7f, -10f, 0f);
         plataformasArriba = new Vector3(6.7f, -2.3f, 0f);
         triggerScript = Trigger.GetComponent<Trigger>();
         anim = GetComponent<Animator>();
+
+        Rigidbody2D rbVallas = vallas.GetComponent<Rigidbody2D>();
+        if (rbVallas != null)
+            rbVallas.bodyType = RigidbodyType2D.Kinematic;
+
+        Rigidbody2D rbEscaleras = escaleras.GetComponent<Rigidbody2D>();
+        if (rbEscaleras != null)
+            rbEscaleras.bodyType = RigidbodyType2D.Kinematic;
     }
 
     void Update()
     {
-        
         bossFight = triggerScript.bossFight;
 
         if (bossFight && !corrutinaActiva && !plataformasActivas && !muerto)
@@ -59,6 +69,11 @@ public class Angel : MonoBehaviour
         {
             PostMuerte();
             procesoMuerteActivo = true;
+        }
+
+        if (corrutinaVallasTerminada && corrutinaEscalerasTerminada)
+        {
+            Destroy(gameObject, 0.8f);
         }
     }
 
@@ -75,14 +90,14 @@ public class Angel : MonoBehaviour
         int randomIndex = Random.Range(0, swordPrefabs.Length);
         GameObject swordPattern = Instantiate(swordPrefabs[randomIndex], new Vector3(24.6f, -1, 0f), Quaternion.identity);
 
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(0.5f);
 
         anim.SetTrigger("Attack");
 
         Rigidbody2D[] swords = swordPattern.GetComponentsInChildren<Rigidbody2D>();
         foreach (Rigidbody2D sword in swords)
         {
-            sword.gravityScale = 1.8f;
+            sword.gravityScale = 2.5f;
         }
 
         yield return new WaitForSeconds(2f);
@@ -101,12 +116,12 @@ public class Angel : MonoBehaviour
 
     private IEnumerator MoverPlataformas()
     {
-        plataformasActivas = true; 
+        plataformasActivas = true;
 
         float duracion = duracionMovimiento;
         float elapsed = 0f;
 
-        // Movimiento de subida
+        // Subida
         while (elapsed < duracion)
         {
             float t = elapsed / duracion;
@@ -116,10 +131,9 @@ public class Angel : MonoBehaviour
         }
         plataformas.transform.position = plataformasArriba;
 
-        // Esperar 10 segundos arriba
         yield return new WaitForSeconds(6);
 
-        // Movimiento de bajada
+        // Bajada
         elapsed = 0f;
         while (elapsed < duracion)
         {
@@ -130,7 +144,7 @@ public class Angel : MonoBehaviour
         }
         plataformas.transform.position = plataformasAbajo;
 
-        plataformasActivas = false; // Desactivamos el estado de plataformas al finalizar el movimiento
+        plataformasActivas = false;
     }
 
     public void RecibirDanio(int cantidad)
@@ -142,33 +156,27 @@ public class Angel : MonoBehaviour
         }
         else
         {
-            //audioManager.reproducirEfecto(audioManager.angelRecibirDaï¿½o); 
-            //aun no esta puesto este efecto de sonido
+            //audioManager.reproducirEfecto(audioManager.angelRecibirDanio); 
         }
     }
 
     void Morir()
     {
+        muerto = true;
         anim.SetTrigger("Death");
         audioManager.reproducirEfecto(audioManager.angelMuerte);
-        if (corrutinaVallasTerminada && corrutinaEscalerasTerminada)
-        {
-            Destroy(gameObject, 0.8f);
-            muerto = true;
-        }
     }
 
     public void PostMuerte()
     {
-        //para mover las vallas a su posicion original
-        MoverObjeto(vallas, vallas.transform.position, posicionObjetivoVallas, 0.5f);
-        //para subir las escaleras
-        MoverObjeto(escaleras, escaleras.transform.position, posicionObjetivoEscaleras, 0.5f);
+        StartCoroutine(MoverObjeto(vallas, vallas.transform.position, posicionObjetivoVallas, 0.5f));
+        StartCoroutine(MoverObjeto(escaleras, escaleras.transform.position, posicionObjetivoEscaleras, 0.5f));
 
         if (camara != null)
         {
-            camara.AjustarAlturaYZoom(0f, 0f, 0.5f); //para devolver la camara a su estado original
-        } else
+            camara.AjustarAlturaYZoom(0f, 0f, 0.5f);
+        }
+        else
         {
             Debug.LogWarning("Camara no asignada en el script Angel.");
         }
@@ -176,23 +184,32 @@ public class Angel : MonoBehaviour
 
     IEnumerator MoverObjeto(GameObject objeto, Vector3 inicio, Vector3 destino, float duracion)
     {
-        float tiempo = 0;
+        float tiempo = 0f;
+        Rigidbody2D rb = objeto.GetComponent<Rigidbody2D>();
 
         while (tiempo < duracion)
         {
             tiempo += Time.deltaTime;
-            objeto.transform.position = Vector3.Lerp(inicio, destino, tiempo / duracion);
-            yield return null; // Espera al siguiente frame
+            Vector3 nuevaPos = Vector3.Lerp(inicio, destino, tiempo / duracion);
+            nuevaPos.z = destino.z; // Asegura que se actualice la Z
+
+            if (rb != null && rb.bodyType == RigidbodyType2D.Kinematic)
+                rb.MovePosition(nuevaPos);
+            else
+                objeto.transform.position = nuevaPos;
+
+            yield return null;
         }
 
-        objeto.transform.position = destino; // Asegura la posiciï¿½n final
+        // Asegura que la posición final sea exacta
+        if (rb != null && rb.bodyType == RigidbodyType2D.Kinematic)
+            rb.MovePosition(destino);
+        else
+            objeto.transform.position = destino;
+
         if (objeto == vallas)
-        {
             corrutinaVallasTerminada = true;
-        }
         else if (objeto == escaleras)
-        {
             corrutinaEscalerasTerminada = true;
-        }
     }
 }

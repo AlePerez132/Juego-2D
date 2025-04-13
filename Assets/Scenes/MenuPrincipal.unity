@@ -619,6 +619,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 202547194}
   m_CullTransparentMesh: 1
+--- !u!1 &347474661
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 347474662}
+  - component: {fileID: 347474663}
+  m_Layer: 0
+  m_Name: Contador
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &347474662
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 347474661}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.0135449, y: 0.6584785, z: 90}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &347474663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 347474661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dff15bd2ee74d347a5332cc513866af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  segundosJugados: 0
 --- !u!1 &358378981
 GameObject:
   m_ObjectHideFlags: 0
@@ -5587,7 +5632,7 @@ MonoBehaviour:
   esqueletoRecibirDanio: {fileID: 8300000, guid: b071d46f2c394ac41a23e3f8412688eb, type: 3}
   impactoBolaFuego: {fileID: 8300000, guid: f525453de0a7d634f978261e450d7231, type: 3}
   ataqueEspadasAngel: {fileID: 8300000, guid: dd695723d5fa39b4cb7763e0562d1f9a, type: 3}
-  "angelRecibirDa\xF1o": {fileID: 0}
+  angelRecibirDanio: {fileID: 0}
   angelMuerte: {fileID: 8300000, guid: 9afdb49726f83694d83f91af07419954, type: 3}
   musicaLobby: {fileID: 8300000, guid: 5cde6bdfb5c2003478545c5023802395, type: 3}
   musicaEscena1: {fileID: 8300000, guid: 6f161f996798b4b4c83a8e868728b781, type: 3}
@@ -9360,3 +9405,4 @@ SceneRoots:
   - {fileID: 1253878567}
   - {fileID: 450044017}
   - {fileID: 1582992971}
+  - {fileID: 347474662}
