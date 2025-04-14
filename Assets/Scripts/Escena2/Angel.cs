@@ -88,7 +88,7 @@ public class Angel : MonoBehaviour
         }
 
         int randomIndex = Random.Range(0, swordPrefabs.Length);
-        GameObject swordPattern = Instantiate(swordPrefabs[randomIndex], new Vector3(24.6f, -1, 0f), Quaternion.identity);
+        GameObject swordPattern = Instantiate(swordPrefabs[randomIndex], new Vector3(24.6f, -1, -1), Quaternion.identity);
 
         yield return new WaitForSeconds(0.5f);
 

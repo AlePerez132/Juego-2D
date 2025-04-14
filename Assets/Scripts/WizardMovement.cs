@@ -317,8 +317,9 @@ public class WizardMovement : MonoBehaviour
     {
         // Mover el menú a la posición de la cámara
         Debug.Log("LLamando al menu game over");
-        Vector3 cameraPosition = camara.transform.position;
-        gameOverMenu.transform.position = new Vector3(cameraPosition.x, cameraPosition.y, gameOverMenu.transform.position.z);
+        //Vector3 cameraPosition = camara.transform.position;
+        RectTransform rectTransform = gameOverMenu.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
 
     }
 }
