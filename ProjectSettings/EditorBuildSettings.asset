@@ -20,6 +20,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Escena2.unity
     guid: d0b63c6e27ce9954fa31b3d986b0e2b0
+  - enabled: 1
+    path: Assets/Scenes/Escena3.unity
+    guid: 8ef5ce2669bd97b49892dfd9552748be
+  - enabled: 1
+    path: Assets/Scenes/TablaRecords.unity
+    guid: f75b9f271d4b8554894b3269ae56437c
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
