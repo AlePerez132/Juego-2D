@@ -322,4 +322,25 @@ public class WizardMovement : MonoBehaviour
         rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
 
     }
+
+        public void CurarVida(int cantidad)
+    {
+        if (isDead) return;
+
+        vidaActual += cantidad;
+
+        vidaActual = Mathf.Clamp(vidaActual, 0, maxVida); // Evita pasar el máximo
+        barraVida.fillAmount = (float)vidaActual / maxVida;
+
+        if (vidaActual > maxVida * 0.75f)
+            barraVida.color = Color.green;
+        else if (vidaActual > maxVida * 0.5f)
+            barraVida.color = Color.yellow;
+        else if (vidaActual > maxVida * 0.3f)
+            barraVida.color = new Color(1f, 0.647f, 0f);
+        else
+            barraVida.color = Color.red;
+
+        PlayerPrefs.SetInt("vidaActual", vidaActual);
+    }
 }
