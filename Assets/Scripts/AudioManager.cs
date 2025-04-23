@@ -1,4 +1,3 @@
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -27,6 +26,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip ataqueEspadasAngel;
     public AudioClip angelRecibirDanio;
     public AudioClip angelMuerte;
+    public AudioClip curacion;
     [Header("MUSICA")]
     public AudioClip musicaLobby;
     public AudioClip musicaEscena1;

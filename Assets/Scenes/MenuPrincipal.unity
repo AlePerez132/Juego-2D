@@ -5634,6 +5634,7 @@ MonoBehaviour:
   ataqueEspadasAngel: {fileID: 8300000, guid: dd695723d5fa39b4cb7763e0562d1f9a, type: 3}
   angelRecibirDanio: {fileID: 0}
   angelMuerte: {fileID: 8300000, guid: 9afdb49726f83694d83f91af07419954, type: 3}
+  curacion: {fileID: 8300000, guid: 879530dcc3758574588d3dfe6ef78cb0, type: 3}
   musicaLobby: {fileID: 8300000, guid: 5cde6bdfb5c2003478545c5023802395, type: 3}
   musicaEscena1: {fileID: 8300000, guid: 6f161f996798b4b4c83a8e868728b781, type: 3}
   musicaEscena2: {fileID: 8300000, guid: 18cda75f06d0b474385a0060945882f9, type: 3}

@@ -342,5 +342,6 @@ public class WizardMovement : MonoBehaviour
             barraVida.color = Color.red;
 
         PlayerPrefs.SetInt("vidaActual", vidaActual);
+        audioManager.reproducirEfecto(audioManager.curacion);
     }
 }

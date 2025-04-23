@@ -25,7 +25,7 @@ public class Espada : MonoBehaviour
             WizardMovement wizardScript = Wizard.GetComponent<WizardMovement>();
             if (wizardScript != null)
             {
-                wizardScript.RecibirDanio(10); // Llama al método de recibir daño en el script del jugador
+                wizardScript.RecibirDanio(20); // Llama al método de recibir daño en el script del jugador
                 yaHizoDanio = true; // Marca que ya se ha hecho daño
             }
         }
