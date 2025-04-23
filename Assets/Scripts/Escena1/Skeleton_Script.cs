@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
 
 public class Skeleton_Script : MonoBehaviour
 {
@@ -13,6 +15,7 @@ public class Skeleton_Script : MonoBehaviour
     private float tiempoUltimoAtaque = 0f;
     public float tiempoEntreAtaques = 1.5f;
     private bool estaMuerto = false;
+     public Image barraVida;
 
 
     AudioManager audioManager;
@@ -107,21 +110,36 @@ public class Skeleton_Script : MonoBehaviour
 }
 
 
-    public void RecibirDanio(int cantidad)
+public void RecibirDanio(int cantidad)
+{
+    vida -= cantidad;
+
+    if (barraVida != null)
     {
-        vida -= cantidad;
-        if (vida <= 0)
-        {
-            estaMuerto = true; 
-            //Desactivamos que pueda hacerle daño al Wizard
-            GetComponent<Collider2D>().enabled = false;
-            Morir();
-        }
+        barraVida.fillAmount = (float)vida / 20f;
+
+        if (vida > 15)
+            barraVida.color = Color.green;
+        else if (vida > 10)
+            barraVida.color = Color.yellow;
+        else if (vida > 6)
+            barraVida.color = new Color(1f, 0.647f, 0f); // Naranja claro
         else
-        {
-            audioManager.reproducirEfecto(audioManager.esqueletoRecibirDanio);
-        }
+            barraVida.color = Color.red;
     }
+
+    if (vida <= 0)
+    {
+        estaMuerto = true;
+        GetComponent<Collider2D>().enabled = false;
+        Morir();
+    }
+    else
+    {
+        audioManager.reproducirEfecto(audioManager.esqueletoRecibirDanio);
+    }
+}
+
 
     void Morir()
 {
