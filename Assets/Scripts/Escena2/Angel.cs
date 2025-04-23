@@ -93,12 +93,13 @@ public class Angel : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         anim.SetTrigger("Attack");
-
+        audioManager.reproducirEfecto(audioManager.ataqueEspadasAngel);
         Rigidbody2D[] swords = swordPattern.GetComponentsInChildren<Rigidbody2D>();
         foreach (Rigidbody2D sword in swords)
         {
             sword.gravityScale = 2.5f;
         }
+
 
         yield return new WaitForSeconds(2f);
 
