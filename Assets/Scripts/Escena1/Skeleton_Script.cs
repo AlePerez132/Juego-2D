@@ -12,6 +12,8 @@ public class Skeleton_Script : MonoBehaviour
     public int vida = 20;
     private float tiempoUltimoAtaque = 0f;
     public float tiempoEntreAtaques = 1.5f;
+    private bool estaMuerto = false;
+
 
     AudioManager audioManager;
 
@@ -43,25 +45,20 @@ public class Skeleton_Script : MonoBehaviour
 
    void Update()
 {
-    if (Wizard == null) return;
-
+    if (Wizard == null || estaMuerto) return; 
     Vector3 direccion = Wizard.transform.position - transform.position;
     float distancia = direccion.magnitude;
     float diferenciaAltura = Mathf.Abs(Wizard.transform.position.y - transform.position.y);
-
     anim.SetFloat("Distance", distancia);
 
-    // Mirar hacia el mago
-    if (direccion.x >= 0.0f)
+    if (direccion.x >= 0.0f) //Mirar hacia el mago
         transform.localScale = new Vector3(3.0f, 3.0f, 3.0f);
     else
         transform.localScale = new Vector3(-3.0f, 3.0f, 3.0f);
 
-    // Solo actuar si está dentro del rango de detección
-    if (distancia < 15.0f && HaySueloDelante())
+    if (distancia < 15.0f && HaySueloDelante()) //Sólo actúa si está dentro del rango de detección
     {
-        // --- ATAQUE ---
-        //El esqueleto atacará si está dentro del rango de ataque y a la misma altura
+        //Ataque
         if (distancia < 1.8f && Time.time - tiempoUltimoAtaque > tiempoEntreAtaques && diferenciaAltura <= alturaPermitida)
         {
             anim.SetFloat("Speed", 0);
@@ -72,61 +69,52 @@ public class Skeleton_Script : MonoBehaviour
                 {
                     audioManager.reproducirEfecto(audioManager.espadazo);
                 }
-            
-        }
-    
-        // --- PERSEGUIR ---
-        else if (diferenciaAltura <= alturaPermitida && distancia < 15.0f)
-        {
-            // Solo moverse si el esqueleto está a la misma altura que el mago
-            if (Mathf.Abs(Wizard.transform.position.y - transform.position.y) <= alturaPermitida)
-            {
+        } else if (diferenciaAltura <= alturaPermitida && distancia < 15.0f) /*PERSECUCIÓN*/  {
+            //Solo se mueve si está a la misma altura que el mago
+            if (Mathf.Abs(Wizard.transform.position.y - transform.position.y) <= alturaPermitida) {
                 anim.SetFloat("Speed", speed);
-            }
-            else
-            {
+            } else {
                 anim.SetFloat("Speed", 0);
             }
-
             // Moverse hacia el mago
             direccion.y = 0;
             transform.position += direccion.normalized * speed * Time.deltaTime;
-        }
-        else if (diferenciaAltura > alturaPermitida && distancia < 15.0f)
-        {
+        } else if (diferenciaAltura > alturaPermitida && distancia < 15.0f) {
             direccion.y = 0;
             transform.position += direccion.normalized * speed * Time.deltaTime;
             anim.SetFloat("Speed", speed);
-        }
-        else
-        {
+        } else {
             anim.SetFloat("Speed", 0);
         }
-    }
-    else
-    {
-        anim.SetFloat("Speed", 0); // Fuera de rango de detección
+    } else {
+        anim.SetFloat("Speed", 0); //Fuera de rango de detección
     }
 }
 
 
-    public void HacerDanio()
+   public void HacerDanio()
+{
+    if (estaMuerto) return;
+
+    if (Wizard != null)
     {
-        if (Wizard != null)
+        WizardMovement wizardScript = Wizard.GetComponent<WizardMovement>();
+        if (wizardScript != null)
         {
-            WizardMovement wizardScript = Wizard.GetComponent<WizardMovement>();
-            if (wizardScript != null)
-            {
-                wizardScript.RecibirDanio(8);
-            }
+            wizardScript.RecibirDanio(8);
         }
     }
+}
+
 
     public void RecibirDanio(int cantidad)
     {
         vida -= cantidad;
         if (vida <= 0)
         {
+            estaMuerto = true; 
+            //Desactivamos que pueda hacerle daño al Wizard
+            GetComponent<Collider2D>().enabled = false;
             Morir();
         }
         else
@@ -136,11 +124,12 @@ public class Skeleton_Script : MonoBehaviour
     }
 
     void Morir()
-    {
-        anim.SetTrigger("die");
-        audioManager.reproducirEfecto(audioManager.muerteEnemigo);
-        Destroy(gameObject, 0.8f);
-    }
+{
+    anim.SetTrigger("die");
+    audioManager.reproducirEfecto(audioManager.muerteEnemigo);
+    Destroy(gameObject, 0.8f);
+}
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
